@@ -28,7 +28,7 @@ Attenzione: Arduino IDE vuole \*\*una cartella per sketch, con lo stesso nome de
 
 \## Architettura (modulare, pensata per essere estesa da un LLM)
 
-Stesso schema di `Sirio/Sirio.ino`: ogni giro del `loop` è \*\*LEGGI → AGGIORNA → DISEGNA\*\*.
+Stesso schema di `tamagotchi/`: ogni giro del `loop` è \*\*LEGGI → AGGIORNA → DISEGNA\*\*.
 
 \- Solo il modulo \*\*sensori\*\* parla con l'hardware. La \*\*logica\*\* lavora su dati (`Sensi`, statistiche, stato) e non disegna. Il \*\*disegno\*\* disegna ciò che riceve e non legge mai i sensori.
 
@@ -38,7 +38,7 @@ Stesso schema di `Sirio/Sirio.ino`: ogni giro del `loop` è \*\*LEGGI → AGGIOR
 
 
 
-Struttura target (da confermare nella prima fase di piano; si migra da `Sirio/Sirio.ino` (aggiungendo le differenze di Vega e delle moodboard) spostando il codice \*\*senza cambiarne il contenuto\*\*):
+Struttura attuale (lo sketch unico, nato da `Sirio.ino` e `Vega.ino` spostando il codice **senza cambiarne il contenuto**):
 
 ```
 
@@ -48,9 +48,17 @@ tamagotchi/                 <- cartella = nome del .ino principale
 
 &#x20; tipi.h                    struct ed enum (prima di tutto)
 
-&#x20; config.h                  TUTTE le costanti tarabili, raggruppate per tema
+&#x20; personaggio.h             UNA riga: quale stella caricare (PERSONAGGIO_SIRIO o PERSONAGGIO_VEGA)
+
+&#x20; config.h                  sceglie config_sirio.h o config_vega.h (niente da tarare)
+
+&#x20; config_comune.h           costanti tarabili uguali per le due stelle, raggruppate per tema
+
+&#x20; config_sirio.h, config_vega.h   costanti e comportamenti (`*_TIPO`) propri di ciascuna stella
 
 &#x20; colori.h                  rgb() e palette
+
+&#x20; dati.h                    TUTTE le variabili globali (cosi ogni .ino le trova gia dichiarate)
 
 &#x20; sensori.ino               leggi sensori, calibrazione (IMU, luce, mic, touch…)
 
@@ -66,7 +74,7 @@ Regole Arduino IDE da rispettare:
 
 \- I `.ino` della cartella sono uniti \*\*in ordine alfabetico\*\*; non dipendere dall'ordine: i tipi stanno in `.h` inclusi esplicitamente.
 
-\- Struct/enum \*\*mai dopo\*\* la prima funzione (altrimenti "does not name a type"), come spiegato in `Sirio/Sirio.ino`.
+\- Struct/enum \*\*mai dopo\*\* la prima funzione (altrimenti "does not name a type"), come spiegato in `tamagotchi/tipi.h`.
 
 \- `#include <SD.h>` va prima di `M5CoreS3.h` se si usa la SD.
 
@@ -74,7 +82,7 @@ Regole Arduino IDE da rispettare:
 
 
 
-\## Stile di programmazione (dedotto da `Sirio/Sirio.ino`)
+\## Stile di programmazione (dedotto da `tamagotchi/`)
 
 \- \*\*Tutto in italiano\*\*: nomi di variabili, funzioni, costanti, struct, commenti, messaggi seriali (senza accenti nelle stringhe mostrate sullo schermo). Eccezioni: parole delle API (`M5Canvas`, `Serial`, `loop`…).
 

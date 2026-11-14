@@ -35,7 +35,7 @@ Esempio da mostrare: *"Su Vega: quando qualcuno parla vicino, la stella pulsa pi
 - Se qualcosa non funziona, chiedi: cosa ti aspettavi, cosa succede invece, cosa hai fatto prima.
 
 ## Formato della risposta dopo ogni implementazione
-- **Spiegazione a grandi linee**, in italiano semplice, senza gergo: cosa fa il codice, in 3–8 righe. Se serve un termine tecnico, spiegarlo in una frase (come fanno i commenti di `Sirio/Sirio.ino`).
+- **Spiegazione a grandi linee**, in italiano semplice, senza gergo: cosa fa il codice, in 3–8 righe. Se serve un termine tecnico, spiegarlo in una frase (come fanno i commenti di `tamagotchi/`).
 - **Costanti da cambiare**: tabella con nome, valore attuale, cosa succede se si alza/abbassa, modulo/file dove si trova. Sono solo quelle che Chiara ha senso tarare.
 - **Cosa controllare sulla board** (cosa dovrebbe vedere; cosa fare se un movimento va al contrario, es. cambiare `SEGNO_ASSE_*`).
 - Evidenziare i file modificati e quelli nuovi.

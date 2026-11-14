@@ -14,11 +14,9 @@ Un Tamagotchi \*\*senza elementi iconografici e senza caratteristiche umanoidi\*
 
 |---|---|
 
-| `tamagotchi/` | **Sketch unico di Sirio e Vega**: la stella si sceglie in `personaggio.h`; i numeri propri di ciascuna in `config_sirio.h` e `config_vega.h`, quelli comuni in `config_comune.h`. I comportamenti diversi (ascolto, crescita, orbita, festa) si scelgono con le costanti `*_TIPO`. |
+| `tamagotchi/` | **Sketch unico di Sirio e Vega**: la stella si sceglie in `personaggio.h`; i numeri propri di ciascuna in `config_sirio.h` e `config_vega.h`, quelli comuni in `config_comune.h`. I comportamenti diversi (ascolto, crescita, orbita, festa) si scelgono con le costanti `*_TIPO`. È anche il **riferimento di stile**. |
 
-| `Sirio/`, `Vega/` | Versioni originali, tenute solo finché lo sketch unico non è provato sulle board. `Sirio.ino` è il **riferimento di stile**. |
-
-| `Sirio_moodboard/`, `Vega_moodboard/` | Come sopra, più le varianti grafiche della stella (si cambiano con uno swipe). |
+| `archivio/Sirio_moodboard/`, `archivio/Vega_moodboard/` | Vecchio codice di Sirio e Vega più 3 varianti grafiche della stella (perline, scintilla, prisma, cambiate con uno swipe). **In sospeso**: non modificarle e non aggiungerle a `tamagotchi/` finché il gruppo non lo decide. |
 
 | `riferimenti/EsploratoreCoreS3/EsploratoreCoreS3.ino` | Sketch di partenza del professore: una pagina per ogni sensore. \*\*Consultalo\*\* per la sintassi corretta delle API (`CoreS3.Imu`, `.Touch`, `.Mic`, `.Ltr553`, `.Speaker`, ESP-NOW…). Non modificarlo. |
 
