@@ -3,33 +3,14 @@
 Progetto di gruppo per il corso di Interaction Design. Utente: **Chiara**, programmatrice alle prime armi.
 Tutto il codice lo scrive Claude; Chiara lo carica sulla board e lo tara.
 
-## Obiettivo
-Un Tamagotchi **senza elementi iconografici e senza caratteristiche umanoidi**: la creatura è una **stella astratta** (resa "halftone", fatta di puntini su griglia) in uno spazio di punti che ruota col giroscopio. Lo stato interno si comunica solo con forma, colore, ritmo, movimento, luce (e suono), mai con facce, occhi, barre-icona o simboli.
+Progetto di gruppo per il corso di Interaction Design. Utenti: **Chiara** (proprietaria della repository, GitHub: `CHIARA_USERNAME`) e le compagne del gruppo, tutte programmatrici alle prime armi.
+Nel resto delle istruzioni "Chiara" indica chi sta usando Claude in quel momento, salvo nella sezione "Collaborazione con git" e nella skill `pubblica`, dove indica solo la proprietaria.
+Tutto il codice lo scrive Claude; Chiara lo carica sulla board e lo tara.
 
-## Hardware e toolchain
-- Scheda **M5Stack CoreS3**, schermo 320×240, programmata da **Arduino IDE** (scheda "M5CoreS3", librerie M5CoreS3 + M5Unified + M5GFX). Monitor seriale a 115200 baud.
-- Sensori/uscite disponibili: IMU (accelerometro, giroscopio, bussola), luce ambiente e prossimità (LTR553), microfoni stereo, touch, altoparlante, camera, batteria/RTC, Wi-Fi/BLE/**ESP-NOW** (la radio prevista per l'interazione fra più dispositivi), microSD.
-- Non posso compilare né provare sulla board: scrivo codice che deve compilare al primo colpo in Arduino IDE e dico a Chiara cosa controllare sul dispositivo.
-
-## File in questa cartella
-| File | Ruolo |
-|---|---|
-| `stella.ino` | **Riferimento di stile** e base attuale: schermata HOME (cielo + stella). |
-| `EsploratoreCoreS3.ino` | Sketch di partenza del professore: una pagina per ogni sensore. **Consultalo** per la sintassi corretta delle API (`CoreS3.Imu`, `.Touch`, `.Mic`, `.Ltr553`, `.Speaker`, ESP-NOW…). Non modificarlo. |
-| `Automa a stati finiti_stella.pdf` | Specifica dell'automa (vedi sotto). |
-| `moodboard.pdf` | Direzione estetica: stelle a scintilla/punte curve, halftone, puntini su griglia, scie, cielo nero con punti, orbite sottili. |
-
-Attenzione: Arduino IDE vuole **una cartella per sketch, con lo stesso nome del `.ino` principale**, e compila insieme tutti i `.ino` della cartella. Due sketch indipendenti non possono convivere nella stessa cartella.
-
-## Automa a stati (dal PDF)
-Statistiche (0–100): `nutrimento (n)`, `socialità (s)`, `energia (e)`, `umore (u)`, `salute`.
-- **IN SALUTE**
-  - Asse attiva: `ATTIVA` ⇄ `SOLITARIA` (s<50 / s>80), `ATTIVA` ⇄ `SCARICA` (n<50 / n>50), `ATTIVA` ⇄ `STATICA` (e<20 / e>50).
-  - Dopo `ATTIVA` si va a `NOTTE` o `GIORNO`. `NOTTE` ⇄ `BRILLARE` (u>80 / u<40). `GIORNO` ⇄ `RICARICA` (u<40 / n>80).
-- **IN CRESCITA**: da `NOTTE` con salute=100 → `COSTELLAZIONE`; ritorna dopo "x" secondi.
-- **IN DECADENZA**: salute<20 → `MALATA` (torna in salute con salute>60); salute=0 → `ESPLOSIONE` → (invita) `UNISONO` → dopo "x" secondi (o "invita") torna a `RICARICA`.
-- Colore della stella in base alla salute: 20% rosa-rosso, 40% arancio, 60% giallo, 80% viola, 100% azzurro chiaro.
-- Il PDF è ambiguo su alcune soglie e sui trigger (`invita`): **chiedere a Chiara prima di implementare lo stato interessato**, non inventare.
+Altre istruzioni:
+- `.claude/rules/progetto.md`: obiettivo, file, automa a stati, estetica, domande aperte.
+- `.claude/rules/codice.md`: hardware, architettura, stile di programmazione (caricato quando apri un `.ino` o un `.h`).
+- skill `pubblica`: procedura per mandare le modifiche su GitHub.
 
 ## Flusso di lavoro (OBBLIGATORIO)
 Quando Chiara chiede di programmare qualcosa:
@@ -52,52 +33,34 @@ Eccezione: correzioni minime di bug già concordate non richiedono un piano comp
 - Non aggiungere dipendenze o librerie nuove senza chiederlo.
 - Mai tarare "a occhio" in silenzio: ogni numero tarabile va in una costante in configurazione.
 
-## Architettura (modulare, pensata per essere estesa da un LLM)
-Stesso schema di `stella.ino`: ogni giro del `loop` è **LEGGI → AGGIORNA → DISEGNA**.
-- Solo il modulo **sensori** parla con l'hardware. La **logica** lavora su dati (`Sensi`, statistiche, stato) e non disegna. Il **disegno** disegna ciò che riceve e non legge mai i sensori.
-- La logica scrive in `AspettoStella` (colore, raggio, punte, vita, affilatura, rotazione, ecc.); il disegno lo legge. **Ogni nuovo stato dell'automa cambia solo questi numeri** (e al massimo aggiunge campi). È il punto di estensione principale.
-- Una schermata = una funzione `schermataXxx(M5Canvas&)` + una voce nell'`enum Schermata` e nello `switch` del `loop`.
+## Collaborazione con git
+La repository è condivisa dal gruppo. Le compagne di Chiara non devono imparare git: lo gestisci tu per loro, spiegando ogni passo in una frase semplice e senza gergo. La prima volta che nomini una pull request, chiamala "proposta di modifica (pull request)".
 
-Struttura target (da confermare nella prima fase di piano; si migra da `stella.ino` spostando il codice **senza cambiarne il contenuto**):
-```
-tamagotchi/                 <- cartella = nome del .ino principale
-  tamagotchi.ino            setup() e loop() soltanto, nient'altro
-  tipi.h                    struct ed enum (prima di tutto)
-  config.h                  TUTTE le costanti tarabili, raggruppate per tema
-  colori.h                  rgb() e palette
-  sensori.ino               leggi sensori, calibrazione (IMU, luce, mic, touch…)
-  logica_*.ino              un file per tema: statistiche, automa, molle, orientamento
-  disegno_*.ino             un file per tema: cielo, stella, effetti
-  schermate.ino             le schermate e lo switch
-```
-Regole Arduino IDE da rispettare:
-- I `.ino` della cartella sono uniti **in ordine alfabetico**; non dipendere dall'ordine: i tipi stanno in `.h` inclusi esplicitamente.
-- Struct/enum **mai dopo** la prima funzione (altrimenti "does not name a type"), come spiegato in `stella.ino`.
-- `#include <SD.h>` va prima di `M5CoreS3.h` se si usa la SD.
-- Ogni modulo ha in testa un commento di 2–4 righe: cosa fa, cosa legge, cosa scrive.
+### Setup (all'inizio di ogni sessione, prima di tutto il resto)
+1. Esegui `gh --version`. Se `gh` non è installato, spiega come installarlo (Windows: `winget install --id GitHub.cli`; macOS: `brew install gh`) e fermati finché l'utente non l'ha fatto e riaperto il terminale.
+2. Esegui `gh auth status`. Se l'utente non è autenticato:
+   - spiega in una frase che serve collegare il PC al suo account GitHub;
+   - esegui `gh auth login --web --hostname github.com --git-protocol https`;
+   - mostra all'utente il codice di una sola volta che compare nell'output e digli di inserirlo nella pagina del browser, poi attendi che confermi;
+   - se il comando resta bloccato o fallisce, chiedi all'utente di eseguirlo lui stesso in un terminale separato e di tornare quando ha finito.
+3. Esegui `gh auth setup-git`, così git usa le stesse credenziali di `gh`.
+4. Controlla `git config user.name` e `git config user.email`; se mancano, chiedi nome ed email all'utente e impostali con `git config --global`.
+5. Esegui `gh api user --jq .login` per sapere chi sta lavorando. Se è `CHIARA_USERNAME`, il resto di questa sezione vale solo se lei lo chiede.
 
-## Stile di programmazione (dedotto da `stella.ino`)
-- **Tutto in italiano**: nomi di variabili, funzioni, costanti, struct, commenti, messaggi seriali (senza accenti nelle stringhe mostrate sullo schermo). Eccezioni: parole delle API (`M5Canvas`, `Serial`, `loop`…).
-- Nomi: funzioni e variabili in `camelCase` descrittivo (`aggiornaMolla`, `leggiSensori`, `disegnaCielo`); tipi in `PascalCase` (`PuntoCielo`, `AspettoStella`); **costanti in `MAIUSCOLO_CON_UNDERSCORE`**, nome parlante e con unità o prefisso di tema (`DRAG_FREQUENZA`, `STELLA_RAGGIO`, `PULSAZIONE_PERIODO_MS`, `ZONA_MORTA_GRADI_S`). Colori come costanti (`ROSSO_STELLA`, `NERO`) tramite `rgb(r,g,b)` RGB565.
-- Niente "numeri magici" nel codice: ogni valore da tarare è una `const` nella sezione CONFIGURAZIONE, con un **commento a destra** che dice cosa fa e cosa succede se sale/scende (es. `// più alto = ...`), con unità (`px`, `ms`, `gradi al secondo`) e intervallo `(0-255)`.
-- Le costanti in config sono raggruppate per tema con una riga di intestazione-commento.
-- Struct piccole e semplici (`Sensi`, `Molla`, `AspettoStella`) per passare dati fra moduli, passate per riferimento (`const T&` se sola lettura).
-- Funzioni **corte, con un solo compito**, con un commento di una-due righe sopra che spiega il *perché* in linguaggio semplice (non il *come* riga per riga).
-- Il file è diviso in sezioni numerate con banner `// ===== N. TITOLO =====`: tipi, configurazione, colori, dati, sensori, logica, disegno, schermate, setup/loop. Mantenere questo ordine e questa grafica.
-- Tempo: si usa `millis()` e `dt` in secondi (con tetto 0.1 s), mai `delay()` lunghi nel loop (solo `delay(1)` a fine loop; `delay` ammesso solo in calibrazioni di setup).
-- Disegno: tutto su un `M5Canvas tela` fuori schermo, poi un solo `pushSprite(0,0)` (niente sfarfallio). Fallback a 8 bit se manca memoria.
-- Float espliciti (`1.0f`) nei calcoli dentro le funzioni; `constexpr`/`const` per le costanti; niente `#define` (tranne dove l'esploratore li usa per macro).
-- Numeri casuali ripetibili (generatore con seme, `SEME_CIELO`): stesso seme = stesso risultato.
-- Se un sensore non risponde, il codice **non si blocca**: valori a zero e prosegue (`imuOk`).
-- Diagnostica: una riga al secondo sul Monitor seriale (FPS e valori chiave), intervallo in costante.
-- Prestazioni: puntare ai ~30+ FPS; evitare allocazioni dinamiche (`String`, `new`) nel loop di disegno; array a dimensione fissa da costante.
+### Allineamento con GitHub (subito dopo il setup)
+1. Esegui `git fetch --prune` e `git status`.
+2. Se sei su un branch diverso da `main`, controlla la PR con `gh pr view --json state,url`:
+   - se è `MERGED` o `CLOSED` e non ci sono modifiche non salvate: `git switch main`, `git pull`, `git branch -D <branch>`, e avvisa l'utente in una frase;
+   - se è ancora aperta: ricorda che c'è una proposta in attesa e chiedi se vuole continuare su quella o iniziare un lavoro nuovo (in quel caso torna su `main` e aggiornalo).
+3. Se sei su `main`, esegui `git pull`.
 
-## Estetica (vincoli di design)
-- Nero profondo, punti bianchi/grigi, stella halftone con colore dello stato; scie e pulsazioni lente; movimento elastico (molle) invece di scatti.
-- Vietati: facce, occhi, bocche, braccia, cuori, icone, emoji, barre di stato con simboli. Lo stato si legge da colore, numero di punte, forma, pulsazione, rotazione, densità/luce dei punti, drag.
-- Stile della moodboard: scintille a quattro/otto punte, halftone, griglie di puntini, orbite sottili, linee d'aria.
+### Durante il lavoro
+- Non fare mai commit né push su `main`.
+- Quando un insieme di modifiche è completo (di solito dopo la risposta di fine implementazione e dopo che l'utente ha provato sulla board), chiedi: "Vuoi mandare queste modifiche su GitHub?" Se l'utente accetta, usa la skill `pubblica`.
 
-## Domande aperte (da chiarire con Chiara prima di implementare)
-- Come variano le statistiche nel tempo (decadimento) e con quali azioni/sensori crescono (tocco, luce, microfono, scossa, vicinanza di un altro dispositivo via ESP-NOW)?
-- Valori esatti di soglie e durate ("x" secondi), significato preciso di `invita`, `UNISONO`, `COSTELLAZIONE`.
-- Uso dell'audio (suoni della creatura?) e persistenza (salvataggio dello stato dopo lo spegnimento?).
+### Conflitti ed errori
+- Se una PR aperta va in conflitto con `main`, aggiorna il branch con `git merge origin/main`.
+- Non risolvere conflitti in silenzio: spiega quali file sono coinvolti, proponi una soluzione e chiedi conferma. In `config.h` i conflitti riguardano spesso tarature diverse della stessa costante: chiedi quale valore tenere invece di sceglierlo tu.
+- I PDF e le immagini non si possono unire: in caso di conflitto chiedi quale versione tenere.
+- Mai eseguire `git push --force`, `git reset --hard`, `git clean`, `git rebase` o cancellare branch remoti senza una richiesta esplicita dell'utente.
+- Se qualcosa non torna, fermati, spiega cosa è successo e suggerisci di sentire Chiara.
