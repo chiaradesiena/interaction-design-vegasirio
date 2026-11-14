@@ -1,9 +1,6 @@
 # CLAUDE.md — Tamagotchi Stella (M5Stack CoreS3)
 
-Progetto di gruppo per il corso di Interaction Design. Utente: **Chiara**, programmatrice alle prime armi.
-Tutto il codice lo scrive Claude; Chiara lo carica sulla board e lo tara.
-
-Progetto di gruppo per il corso di Interaction Design. Utenti: **Chiara** (proprietaria della repository, GitHub: `CHIARA_USERNAME`) e le compagne del gruppo, tutte programmatrici alle prime armi.
+Progetto di gruppo per il corso di Interaction Design. Utenti: **Chiara** (proprietaria della repository, GitHub: `chiaradesiena`) e le compagne del gruppo, tutte programmatrici alle prime armi.
 Nel resto delle istruzioni "Chiara" indica chi sta usando Claude in quel momento, salvo nella sezione "Collaborazione con git" e nella skill `pubblica`, dove indica solo la proprietaria.
 Tutto il codice lo scrive Claude; Chiara lo carica sulla board e lo tara.
 
@@ -58,7 +55,7 @@ La repository è condivisa dal gruppo. Le compagne di Chiara non devono imparare
    - se il comando resta bloccato o fallisce, chiedi all'utente di eseguirlo lui stesso in un terminale separato e di tornare quando ha finito.
 3. Esegui `gh auth setup-git`, così git usa le stesse credenziali di `gh`.
 4. Controlla `git config user.name` e `git config user.email`; se mancano, chiedi nome ed email all'utente e impostali con `git config --global`.
-5. Esegui `gh api user --jq .login` per sapere chi sta lavorando. Se è `CHIARA_USERNAME`, il resto di questa sezione vale solo se lei lo chiede.
+5. Esegui `gh api user --jq .login` per sapere chi sta lavorando. Se è `chiaradesiena`, il resto di questa sezione vale solo se lei lo chiede.
 
 ### Allineamento con GitHub (subito dopo il setup)
 1. Esegui `git fetch --prune` e `git status`.

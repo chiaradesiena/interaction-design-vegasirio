@@ -1,12 +1,8 @@
-\---
-
+---
 paths:
-
-&#x20; - "\*\*/\*.ino"
-
-&#x20; - "\*\*/\*.h"
-
-\---
+  - "**/*.ino"
+  - "**/*.h"
+---
 
 \# Codice: hardware, architettura, stile
 
@@ -18,7 +14,15 @@ paths:
 
 \- Sensori/uscite disponibili: IMU (accelerometro, giroscopio, bussola), luce ambiente e prossimità (LTR553), microfoni stereo, touch, altoparlante, camera, batteria/RTC, Wi-Fi/BLE/\*\*ESP-NOW\*\* (la radio prevista per l'interazione fra più dispositivi), microSD.
 
-\- Non posso compilare né provare sulla board: scrivo codice che deve compilare al primo colpo in Arduino IDE e dico a Chiara cosa controllare sul dispositivo.
+\- Non posso provare sulla board (lo fa Chiara: le dico cosa controllare), ma \*\*devo compilare\*\* prima di consegnare il codice, con l'`arduino-cli` che sta dentro Arduino IDE:
+
+&#x20; - Windows: `%LOCALAPPDATA%\Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe`; macOS: `/Applications/Arduino IDE.app/Contents/Resources/app/lib/backend/resources/arduino-cli`.
+
+&#x20; - Comando: `arduino-cli compile --fqbn m5stack:esp32:m5stack_cores3 --build-path <cartella temporanea fuori dalla repository> tamagotchi`.
+
+&#x20; - Compila \*\*tutte e due le stelle\*\*: Vega su una copia temporanea della cartella con `personaggio.h` cambiato, senza toccare l'originale.
+
+&#x20; - Se la compilazione fallisce, correggi prima di rispondere. Se `arduino-cli` o la scheda M5Stack non sono installati, dillo e scrivi codice che compili al primo colpo.
 
 
 
