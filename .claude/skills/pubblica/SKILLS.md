@@ -16,7 +16,7 @@ Spiega ogni passo all'utente in una frase semplice, senza gergo.
 
 1\. Se sei su `main`, crea un branch con `git switch -c <tipo>/<descrizione>`, dove tipo è `aggiunta`, `modifica`, `correzione`, `taratura` o `doc`, e la descrizione è breve, minuscola, senza accenti, con trattini (es. `aggiunta/stato-notte`, `taratura/molla-rotazione`).
 
-2\. Mostra l'elenco dei file modificati. Se compaiono file inattesi (file temporanei, file molto pesanti, password o chiavi, modifiche a `EsploratoreCoreS3.ino` o a `.claude/settings.json`), segnalali e chiedi prima di includerli.
+2\. Mostra l'elenco dei file modificati. Se compaiono file inattesi (file temporanei, file molto pesanti, password o chiavi, modifiche a `riferimenti/EsploratoreCoreS3/EsploratoreCoreS3.ino` o a `.claude/settings.json`), segnalali e chiedi prima di includerli.
 
 3\. Fai il commit con un messaggio chiaro in italiano.
 

@@ -14,13 +14,17 @@ Un Tamagotchi \*\*senza elementi iconografici e senza caratteristiche umanoidi\*
 
 |---|---|
 
-| `stella.ino` | \*\*Riferimento di stile\*\* e base attuale: schermata HOME (cielo + stella). |
+| `tamagotchi/` | **Sketch unico di Sirio e Vega**: la stella si sceglie in `personaggio.h`; i numeri propri di ciascuna in `config_sirio.h` e `config_vega.h`, quelli comuni in `config_comune.h`. I comportamenti diversi (ascolto, crescita, orbita, festa) si scelgono con le costanti `*_TIPO`. |
 
-| `EsploratoreCoreS3.ino` | Sketch di partenza del professore: una pagina per ogni sensore. \*\*Consultalo\*\* per la sintassi corretta delle API (`CoreS3.Imu`, `.Touch`, `.Mic`, `.Ltr553`, `.Speaker`, ESP-NOW…). Non modificarlo. |
+| `Sirio/`, `Vega/` | Versioni originali, tenute solo finché lo sketch unico non è provato sulle board. `Sirio.ino` è il **riferimento di stile**. |
 
-| `Automa a stati finiti\_stella.pdf` | Specifica dell'automa (vedi sotto). |
+| `Sirio_moodboard/`, `Vega_moodboard/` | Come sopra, più le varianti grafiche della stella (si cambiano con uno swipe). |
 
-| `moodboard.pdf` | Direzione estetica: stelle a scintilla/punte curve, halftone, puntini su griglia, scie, cielo nero con punti, orbite sottili. |
+| `riferimenti/EsploratoreCoreS3/EsploratoreCoreS3.ino` | Sketch di partenza del professore: una pagina per ogni sensore. \*\*Consultalo\*\* per la sintassi corretta delle API (`CoreS3.Imu`, `.Touch`, `.Mic`, `.Ltr553`, `.Speaker`, ESP-NOW…). Non modificarlo. |
+
+| `docs/Automa a stati finiti\_stella.pdf` | Specifica dell'automa (vedi sotto). |
+
+| `docs/moodboard.pdf` | Direzione estetica: stelle a scintilla/punte curve, halftone, puntini su griglia, scie, cielo nero con punti, orbite sottili. |
 
 | `.claude/settings.json` | Permessi di Claude Code per i comandi git e `gh`. Non modificarlo senza richiesta della proprietaria. |
 

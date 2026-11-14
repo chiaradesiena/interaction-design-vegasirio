@@ -28,7 +28,7 @@ Attenzione: Arduino IDE vuole \*\*una cartella per sketch, con lo stesso nome de
 
 \## Architettura (modulare, pensata per essere estesa da un LLM)
 
-Stesso schema di `stella.ino`: ogni giro del `loop` è \*\*LEGGI → AGGIORNA → DISEGNA\*\*.
+Stesso schema di `Sirio/Sirio.ino`: ogni giro del `loop` è \*\*LEGGI → AGGIORNA → DISEGNA\*\*.
 
 \- Solo il modulo \*\*sensori\*\* parla con l'hardware. La \*\*logica\*\* lavora su dati (`Sensi`, statistiche, stato) e non disegna. Il \*\*disegno\*\* disegna ciò che riceve e non legge mai i sensori.
 
@@ -38,7 +38,7 @@ Stesso schema di `stella.ino`: ogni giro del `loop` è \*\*LEGGI → AGGIORNA �
 
 
 
-Struttura target (da confermare nella prima fase di piano; si migra da `stella.ino` spostando il codice \*\*senza cambiarne il contenuto\*\*):
+Struttura target (da confermare nella prima fase di piano; si migra da `Sirio/Sirio.ino` (aggiungendo le differenze di Vega e delle moodboard) spostando il codice \*\*senza cambiarne il contenuto\*\*):
 
 ```
 
@@ -66,7 +66,7 @@ Regole Arduino IDE da rispettare:
 
 \- I `.ino` della cartella sono uniti \*\*in ordine alfabetico\*\*; non dipendere dall'ordine: i tipi stanno in `.h` inclusi esplicitamente.
 
-\- Struct/enum \*\*mai dopo\*\* la prima funzione (altrimenti "does not name a type"), come spiegato in `stella.ino`.
+\- Struct/enum \*\*mai dopo\*\* la prima funzione (altrimenti "does not name a type"), come spiegato in `Sirio/Sirio.ino`.
 
 \- `#include <SD.h>` va prima di `M5CoreS3.h` se si usa la SD.
 
@@ -74,7 +74,7 @@ Regole Arduino IDE da rispettare:
 
 
 
-\## Stile di programmazione (dedotto da `stella.ino`)
+\## Stile di programmazione (dedotto da `Sirio/Sirio.ino`)
 
 \- \*\*Tutto in italiano\*\*: nomi di variabili, funzioni, costanti, struct, commenti, messaggi seriali (senza accenti nelle stringhe mostrate sullo schermo). Eccezioni: parole delle API (`M5Canvas`, `Serial`, `loop`…).
 
@@ -94,7 +94,7 @@ Regole Arduino IDE da rispettare:
 
 \- Disegno: tutto su un `M5Canvas tela` fuori schermo, poi un solo `pushSprite(0,0)` (niente sfarfallio). Fallback a 8 bit se manca memoria.
 
-\- Float espliciti (`1.0f`) nei calcoli dentro le funzioni; `constexpr`/`const` per le costanti; niente `#define` (tranne dove l'esploratore li usa per macro).
+\- Float espliciti (`1.0f`) nei calcoli dentro le funzioni; `constexpr`/`const` per le costanti; niente `#define` (tranne dove l'esploratore li usa per macro, e in `tamagotchi/personaggio.h` per scegliere la stella da caricare).
 
 \- Numeri casuali ripetibili (generatore con seme, `SEME\_CIELO`): stesso seme = stesso risultato.
 

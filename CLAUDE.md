@@ -21,8 +21,21 @@ Quando Chiara chiede di programmare qualcosa:
 
 Eccezione: correzioni minime di bug già concordate non richiedono un piano completo, basta dire cosa si cambia.
 
+## Aiutare chi scrive la richiesta
+Quasi nessuno nel gruppo sa programmare o scrivere prompt. Una richiesta di codice è completa quando dice 4 cose:
+1. **Quale stella**: Sirio, Vega o tutte e due.
+2. **Cosa succede**: cosa fa la stella (es. "diventa più piccola", "lampeggia", "cambia colore").
+3. **Quando**: cosa lo fa partire (un tocco, una voce, una scossa, il buio, il tempo che passa, l'altra stella vicina).
+4. **Nuovo o da cambiare**: è una cosa nuova, oppure si modifica una cosa che c'è già (e cosa non va oggi).
+
+Esempio da mostrare: *"Su Vega: quando qualcuno parla vicino, la stella pulsa più veloce per qualche secondo. È una cosa nuova."*
+
+- Se manca una voce, non indovinare: chiedi solo quella, con 2–3 esempi tra cui scegliere.
+- Se la richiesta è molto vaga, mostra l'elenco e l'esempio qui sopra come modello da copiare.
+- Se qualcosa non funziona, chiedi: cosa ti aspettavi, cosa succede invece, cosa hai fatto prima.
+
 ## Formato della risposta dopo ogni implementazione
-- **Spiegazione a grandi linee**, in italiano semplice, senza gergo: cosa fa il codice, in 3–8 righe. Se serve un termine tecnico, spiegarlo in una frase (come fanno i commenti di `stella.ino`).
+- **Spiegazione a grandi linee**, in italiano semplice, senza gergo: cosa fa il codice, in 3–8 righe. Se serve un termine tecnico, spiegarlo in una frase (come fanno i commenti di `Sirio/Sirio.ino`).
 - **Costanti da cambiare**: tabella con nome, valore attuale, cosa succede se si alza/abbassa, modulo/file dove si trova. Sono solo quelle che Chiara ha senso tarare.
 - **Cosa controllare sulla board** (cosa dovrebbe vedere; cosa fare se un movimento va al contrario, es. cambiare `SEGNO_ASSE_*`).
 - Evidenziare i file modificati e quelli nuovi.
