@@ -17,16 +17,20 @@ float densitaStella(float dx, float dy, const AspettoStella& a) {
 // Griglia di puntini: più il punto è dentro la stella, più il puntino è grande
 void disegnaStella(M5Canvas& c, int cx, int cy, const AspettoStella& a) {
   if (a.luminosita <= 0) return;                      // fase "spenta" del lampeggio: la stella non si vede
-  const int passo = STELLA_PASSO_GRIGLIA;
-  const float raggioMax = passo / 2.0f;
+  bool grigliaCane = a.cane >= SIRIO_CANE_SOGLIA_GRIGLIA;   // Sirio che diventa cane: puntini più fitti (disegno_cane.ino)
+  if (a.cane > 0) preparaCane(a);
+  const int passo = grigliaCane ? SIRIO_CANE_PASSO_GRIGLIA : STELLA_PASSO_GRIGLIA;
+  const float raggioMax = grigliaCane ? SIRIO_CANE_PUNTINO_MAX_PX : passo / 2.0f;
   int n = (int)(a.raggio * max(STELLA_ALONE, 1.0f) / passo) + 1;
   for (int i = -n; i <= n; i++) {
     for (int j = -n; j <= n; j++) {
       float bucoPx = a.buco * a.raggio;                // il buco lascia vedere il cielo: qui non si disegna niente
       if (bucoPx > 0 && (float)(i * i + j * j) * passo * passo < bucoPx * bucoPx) continue;
-      float rf = raggioMax * densitaStella(i * passo, j * passo, a);
-      if (rf < 0.25f) continue;                       // troppo piccolo: niente puntino
+      float densita = densitaStellaOCane(i * passo, j * passo, a);
       int x = cx + i * passo, y = cy - j * passo;
+      if (grigliaCane) { disegnaPuntinoCane(c, x, y, passo, densita, a.colore, a.cane >= 1); continue; }   // cane: puntini tutti uguali
+      float rf = raggioMax * densita;
+      if (rf < 0.25f) continue;                       // troppo piccolo: niente puntino
       c.fillRect(x - passo / 2, y - passo / 2, passo, passo, NERO);   // copre il cielo dietro la stella
       c.fillCircle(x, y, (int)(rf + 0.5f), a.colore); // raggio 0 = un solo pixel
     }

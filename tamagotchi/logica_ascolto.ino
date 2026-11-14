@@ -5,7 +5,7 @@
 
 // Ascolto: finché qualcuno parla (voceAttiva) il valore sale verso 1, poi torna piano verso 0.
 void aggiornaAscolto(float dt) {
-  bool ascoltando = voceAttiva && !festaAttiva;                  // durante la festa l'ascolto non si vede
+  bool ascoltando = voceAttiva && !festaAttiva && !caneAttivo;   // durante la festa e il cane l'ascolto non si vede
   float velocita = ascoltando ? ASCOLTO_VELOCITA_SALITA : ASCOLTO_VELOCITA_DISCESA;
   float k = velocita * dt;
   if (k > 1.0f) k = 1.0f;

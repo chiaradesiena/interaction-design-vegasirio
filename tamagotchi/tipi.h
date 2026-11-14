@@ -47,6 +47,17 @@ struct AspettoStella {
   float spostamentoX, spostamentoY;   // px, piccolo spostamento dal centro (tremolio)
   float buco;            // frazione del raggio lasciata vuota al centro (0 = nessun buco)
   float luminosita;      // 1 = stella accesa, 0 = spenta (serve al lampeggio)
+  float cane;            // 0 = stella, 1 = cane (Sirio, stato proprio); in mezzo = sta cambiando forma
+  float caneAngolo;      // gradi di giro della sagoma del cane (0 = dritto)
+  float caneVerso;       // 1 = il cane guarda a destra, -1 = a sinistra (in mezzo = si sta girando)
+  float caneZampe;       // gradi di cui sono piegate le zampe (avanti e indietro mentre zompetta)
+};
+
+// Un pezzo della sagoma del cane: un ovale (centro, mezza larghezza, mezza altezza, inclinazione)
+struct PezzoCane {
+  float x, y;            // px dal centro del cane (y verso l'alto), cane girato verso destra
+  float rx, ry;          // px, mezza larghezza e mezza altezza dell'ovale
+  float angoloGradi;     // inclinazione (positivo = gira in senso antiorario)
 };
 
 // I bisogni della stella e la sua salute, tutti da 100 (al massimo) a 0 (per niente)
@@ -65,3 +76,4 @@ enum TipoAscolto  { ASCOLTO_PALLINO, ASCOLTO_RAGGI };        // voce: la stella 
 enum TipoCrescita { CRESCITA_TRATTI, CRESCITA_CONTINUA };    // carezza: cresce a tratti / cresce di continuo
 enum TipoOrbita   { ORBITA_OTTO, ORBITA_CASUALE };           // movimento: disegna un 8 / orbite casuali con profondità
 enum TipoFesta    { FESTA_SALTI_BORDO, FESTA_RIMBALZI };     // energia al 100%: salti lungo il bordo / rimbalzi fra alto e basso
+enum TipoStatoProprio { PROPRIO_NESSUNO, PROPRIO_CANE };     // salute alta: nessuna animazione propria / diventa un cane (Sirio)

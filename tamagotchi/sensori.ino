@@ -35,6 +35,20 @@ void suona(float hz, uint32_t durataMs) {
   fineSuonoMs = millis() + durataMs;
 }
 
+// Come suona(), ma per un suono già pronto fatto di campioni (per esempio l'abbaio del cane).
+// I campioni devono restare in memoria finché il suono finisce (per questo stanno in dati.h).
+void suonaCampioni(const int16_t* campioni, size_t numero, uint32_t campioniAlSecondo) {
+  if (micAttivo) {
+    CoreS3.Mic.end();
+    CoreS3.Speaker.begin();
+    micAttivo = false;
+    micHaDati = false;
+    volumeVoceLetto = 0;
+  }
+  CoreS3.Speaker.playRaw(campioni, numero, campioniAlSecondo);
+  fineSuonoMs = millis() + (uint32_t)(numero * 1000 / campioniAlSecondo);
+}
+
 // Misura il volume dell'ambiente (0-1, stessa scala della pagina Microfono dell'esploratore) senza fermare il loop
 void leggiMicrofono(uint32_t ora) {
   if (!micAttivo) {

@@ -8,7 +8,7 @@
 void aggiornaAttivita(float dt) {
   if (bisogni.energia <= ENERGIA_SOGLIA_STATICA) staticaEnergia = true;
   else if (bisogni.energia > ENERGIA_SOGLIA_USCITA_STATICA) staticaEnergia = false;
-  float bersaglio = (staticaEnergia || festaAttiva) ? 0.0f : 1.0f;
+  float bersaglio = (staticaEnergia || festaAttiva || caneAttivo) ? 0.0f : 1.0f;   // anche durante il cane l'orbita si ferma
   float k = ENERGIA_ATTIVITA_VELOCITA * dt;
   if (k > 1.0f) k = 1.0f;
   attivita += (bersaglio - attivita) * k;

@@ -184,5 +184,79 @@ const float VEGA_FESTA_MARGINE_PX = 30;        // distanza del centro della stel
 // Suono della festa (le note sono in config_sirio.h / config_vega.h)
 const uint16_t FESTA_PAUSA_MS = 20;            // silenzio fra una nota e l'altra, in ms
 
+// Stato proprio: con salute pari o sopra la soglia la stella, ogni tanto e da sola, fa una sua animazione. Si sceglie con STATO_PROPRIO_TIPO
+const float STATO_PROPRIO_SOGLIA_SALUTE = 60;  // salute (0-100) da cui in su si è nello stato proprio (più basso = ci entra più facilmente)
+// PROPRIO_CANE (nato per Sirio): gira su se stessa, diventa un cane, poi gira di nuovo e torna stella.
+// Si interrompe quando un bisogno sale davvero (carezza o scossa abbastanza lunghe); la voce non la interrompe
+const float SIRIO_CANE_ATTESA_MIN_S = 30;      // il cane parte a caso fra questo numero di secondi...
+const float SIRIO_CANE_ATTESA_MAX_S = 60;      // ...e questo (contati da quando entra nello stato proprio o dalla fine dell'ultimo cane)
+const float SIRIO_CANE_DURATA_S = 15;          // durata di tutta l'animazione, in secondi (al massimo 15)
+const float SIRIO_CANE_GIRO_INIZIO_S = 2;      // secondi in cui gira e diventa cane (più alto = trasformazione più lenta)
+const float SIRIO_CANE_GIRO_FINE_S = 2;        // secondi in cui gira e torna stella alla fine
+const float SIRIO_CANE_RITORNO_S = 1;          // secondi della giravolta veloce quando lo si interrompe
+const float SIRIO_CANE_GIRO_GRADI_S = 360;     // velocità massima del giro della stella, in gradi al secondo (360 = un giro al secondo)
+const float SIRIO_CANE_GIRI_SAGOMA = 1;        // quanti giri fa la sagoma del cane mentre appare o sparisce (0 = appare dritta senza girare)
+// Movimento del cane: zompetta avanti e indietro, si allontana e si avvicina (Sirio è lento e un po' impacciato)
+const int   SIRIO_CANE_TRAVERSATE = 3;         // quante volte va da una parte all'altra (3 = destra, sinistra, destra; più alto = più veloce)
+const float SIRIO_CANE_CORSA_X_PX = 80;        // quanto si allontana dal centro verso i lati, in px
+const float SIRIO_CANE_PROFONDITA = 0.35;      // quanto rimpicciolisce lontano e cresce vicino (0.35 = da 65% a 135%; 0 = niente)
+const float SIRIO_CANE_PROFONDITA_Y_PX = 25;   // quanto sale quando è lontano (e scende quando è vicino), in px
+const float SIRIO_CANE_SALTO_S = 0.5;          // durata di un saltello, in secondi (più alto = saltelli più lenti)
+const float SIRIO_CANE_SALTO_PX = 8;           // altezza di un saltello, in px
+const float SIRIO_CANE_ZAMPE_GRADI = 25;       // quanto si piegano le zampe avanti e indietro, in gradi (0 = zampe ferme)
+const float SIRIO_CANE_GIRATA_S = 0.5;         // secondi per girarsi quando cambia direzione (più alto = si gira più goffo e lento)
+const float SIRIO_CANE_AVVIO_S = 0.4;          // secondi in cui comincia e smette di zompettare piano (evita scatti)
+const int   SIRIO_CANE_INCIAMPO_OGNI = 6;      // ogni quanti saltelli inciampa (0 = non inciampa mai)
+const float SIRIO_CANE_INCIAMPO_GRADI = 15;    // quanto va giù col muso quando inciampa, in gradi
+const float SIRIO_CANE_INCIAMPO_SALTO = 0.4;   // altezza del saltello inciampato rispetto a uno normale (0-1)
+
+// Abbaio del cane: un "bau" grave e pieno (il tono sale un poco e poi scende), con un po' di fruscio e di ruvidezza.
+// Sirio è timido: abbaia piano e poco
+const int   SIRIO_ABBAI_NUMERO = 2;            // quante volte abbaia durante la passeggiata (deve corrispondere all'elenco qui sotto)
+const float SIRIO_ABBAI_MOMENTI[SIRIO_ABBAI_NUMERO] = { 0.3, 0.75 };   // quando abbaia, come frazione della passeggiata (0 = inizio, 1 = fine)
+const int   SIRIO_ABBAIO_RIPETIZIONI = 2;      // quanti "bau" di fila ogni volta che abbaia (2 = "bau bau")
+const uint16_t SIRIO_ABBAIO_PAUSA_MS = 200;    // silenzio fra un "bau" e l'altro, in ms
+const uint16_t SIRIO_ABBAIO_DURATA_MS = 340;   // durata di un "bau", in ms (al massimo 400; più corto = sembra un guaito)
+const float SIRIO_ABBAIO_TONO_INIZIO_HZ = 260; // tono all'inizio del "bau"
+const float SIRIO_ABBAIO_TONO_PICCO_HZ = 340;  // tono più alto, raggiunto subito dopo l'inizio (più alto = cane più piccolo e acuto)
+const float SIRIO_ABBAIO_TONO_FINE_HZ = 230;   // tono alla fine (più vicino al picco = "bau" più piatto e calmo)
+const float SIRIO_ABBAIO_PICCO = 0.25;         // a che punto del "bau" (0-1) il tono è più alto
+const float SIRIO_ABBAIO_TENUTA = 0.55;        // fino a che punto (0-1) il "bau" resta forte prima di spegnersi (più alto = più prolungato)
+const float SIRIO_ABBAIO_FRUSCIO = 0.3;        // quanto soffio c'è nel suono (0 = solo tono, come un fischio; 1 = solo soffio)
+const float SIRIO_ABBAIO_RUVIDEZZA = 0.35;     // quanto è "graffiato" il suono (0 = liscio; più alto = più ringhioso)
+const float SIRIO_ABBAIO_RUVIDEZZA_HZ = 32;    // velocità della ruvidezza (più basso = più "brontolato")
+const uint16_t SIRIO_ABBAIO_ATTACCO_MS = 30;   // ms in cui il suono arriva al massimo (più basso = più secco, come un colpo)
+const float SIRIO_ABBAIO_VOLUME = 0.7;         // forza dell'abbaio rispetto al volume generale (0-1)
+const uint32_t SIRIO_ABBAIO_CAMPIONI_HZ = 16000;   // qualità del suono (campioni al secondo; non serve cambiarlo)
+const int   SIRIO_ABBAIO_MAX_CAMPIONI = 6400;  // spazio per il suono: 400 ms a 16000 campioni al secondo (non serve cambiarlo)
+
+// Forma del cane: puntini più fitti della stella, così la sagoma si riconosce meglio
+const int   SIRIO_CANE_PASSO_GRIGLIA = 5;      // px fra un puntino e l'altro nel cane (più basso = più dettaglio ma più lento; la stella usa 8)
+const float SIRIO_CANE_PUNTINO_MAX_PX = 2;     // raggio dei puntini del cane, in px (tutti uguali; più alto = cane più "pieno", 1 = più puntinato)
+const float SIRIO_CANE_SOGLIA_BORDO = 0.5;     // cane formato: un puntino c'è se è "dentro" almeno così (0-1; più alto = cane più magro, più basso = più grasso)
+const float SIRIO_CANE_LUCE_MIN = 0.08;        // durante la trasformazione i puntini più scuri di così non si disegnano (0-1)
+const float SIRIO_CANE_SOGLIA_GRIGLIA = 0.3;   // a che punto della trasformazione (0-1) i puntini diventano fitti (si nasconde nel giro veloce)
+const float SIRIO_CANE_GRANDEZZA = 1.0;        // grandezza del cane (1 = largo circa quanto la stella; 1.3 = +30%)
+const float SIRIO_CANE_SFUMATURA_PX = 5;       // px in cui i puntini si scuriscono verso il bordo (più alto = bordo più sfumato)
+const float SIRIO_CANE_MORBIDEZZA_PX = 4;      // quanto si "fondono" i pezzi fra loro (0 = attaccature nette; più alto = cane più tondo)
+// La sagoma: ovali uniti fra loro (x, y, mezza larghezza, mezza altezza, inclinazione in gradi), cane girato verso destra.
+// Le ultime 4 righe sono le zampe: zompettando si piegano attorno alla loro cima.
+const int SIRIO_CANE_NUMERO_PEZZI = 12;        // quanti pezzi ha la sagoma (deve corrispondere all'elenco qui sotto)
+const int SIRIO_CANE_PRIMA_ZAMPA = 8;          // da quale pezzo cominciano le zampe
+const PezzoCane SIRIO_CANE_PEZZI[SIRIO_CANE_NUMERO_PEZZI] = {
+  { -10,  -6, 36, 16,   0 },   // corpo
+  {  16,  -2, 16, 16,   0 },   // petto
+  {  28,  14,  8, 15, -35 },   // collo
+  {  36,  30, 14, 12,   0 },   // testa
+  {  54,  25, 13,  6,  -8 },   // muso
+  {  28,  45,  5, 11,  15 },   // orecchio (dritto, un po' all'indietro)
+  { -52,   8,  4, 14,  45 },   // coda
+  { -36, -12, 13, 14,   0 },   // coscia
+  {  22, -34,  5, 15,   0 },   // zampa davanti
+  {   6, -34,  5, 15,   0 },   // zampa davanti (dietro l'altra)
+  { -30, -34,  5, 15,   0 },   // zampa dietro
+  { -46, -34,  5, 15,   0 },   // zampa dietro (dietro l'altra)
+};
+
 // Conversioni fisse (non vanno tarate)
 const float GRADI_A_RADIANTI = PI / 180.0;

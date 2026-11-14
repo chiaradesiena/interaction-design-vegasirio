@@ -79,6 +79,8 @@ void loop() {
                   (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getMinFreeHeap(), (unsigned)ESP.getPsramSize(), ascolto, micAttivo);
     Serial.printf("scossa %.2f g   scuotendo %d   tempo scossa %.1f s   statica %d   attivita %.2f   festa %d\n",
                   sensi.scossa, scossaRecente, tempoScossaS, staticaEnergia, attivita, festaAttiva);
+    Serial.printf("stato proprio %d   cane %d   forma %.2f   prossimo cane fra %d s\n",
+                  statoProprio, caneAttivo, caneForma, (int)((int32_t)(prossimoCaneMs - millis()) / 1000));
     fotogrammi = 0;
     ultimaStampa = millis();
   }

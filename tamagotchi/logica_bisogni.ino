@@ -30,7 +30,7 @@ void aggiornaSocialita(uint32_t ora, float dt) {
 void aggiornaLampeggio(uint32_t ora) {
   bool solitaria = bisogni.socialita < SOCIALITA_SOGLIA_LAMPEGGIO;
   bool acceso = (ora % LAMPEGGIO_PERIODO_MS) < LAMPEGGIO_PERIODO_MS / 2;
-  luminositaStella = (!solitaria || acceso || voceAttiva || festaAttiva) ? 1.0f : 0.0f;   // mentre si ascolta o c'è la festa la stella resta accesa
+  luminositaStella = (!solitaria || acceso || voceAttiva || festaAttiva || caneAttivo) ? 1.0f : 0.0f;   // mentre si ascolta, c'è la festa o il cane la stella resta accesa
 }
 
 // Energia: scende col tempo e, dopo ENERGIA_SCOSSA_DURATA_MIN_S secondi di scuotimento continuo, sale finché si scuote.

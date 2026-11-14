@@ -40,12 +40,15 @@ void aggiornaStato() {
   aggiornaSuonoCarezza(ora);
   aggiornaSlider();
   aggiornaFesta(ora);
+  aggiornaCane(ora, dt);
+  aggiornaAbbaio(ora);
   aggiornaAttivita(dt);
   aggiornaMovimento(ora);
   aggiornaAscolto(dt);
   aggiornaAspettoStella(ora);
   applicaMovimento();
   applicaAscolto();
+  applicaCane();
   salvaStato(ora);
-  suonoInCorso = suonoNotaCorrente >= 0 || pienoNotaCorrente >= 0 || festaNotaCorrente >= 0 || sliderInUso;   // il microfono aspetta finché c'è un suono
+  suonoInCorso = suonoNotaCorrente >= 0 || pienoNotaCorrente >= 0 || festaNotaCorrente >= 0 || abbaioUfRimasti > 0 || sliderInUso;   // il microfono aspetta finché c'è un suono
 }
