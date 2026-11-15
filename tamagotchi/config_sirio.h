@@ -13,6 +13,9 @@ const TipoOrbita   ORBITA_TIPO   = ORBITA_OTTO;         // movimento: disegna un
 const TipoFesta    FESTA_TIPO    = FESTA_SALTI_BORDO;   // energia al 100%: salti lungo il bordo (FESTA_RIMBALZI = come Vega)
 
 // Cielo
+const uint8_t SFONDO_ROSSO = 30;   // colore dello sfondo: quanto rosso (0-255). Ora: viola notte scuro
+const uint8_t SFONDO_VERDE = 10;   // quanto verde (0-255)
+const uint8_t SFONDO_BLU   = 50;   // quanto blu (0-255); più alto = viola più acceso. Tutti e tre a 0 = nero, come Vega
 const float MOTION_BLUR                = 0.5;   // lunghezza della scia (0 = niente scia, 2 = scia doppia)
 
 // Stella

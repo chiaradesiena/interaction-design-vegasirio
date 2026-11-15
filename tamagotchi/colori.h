@@ -9,6 +9,7 @@ constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
 }
 const uint16_t NERO   = rgb(0, 0, 0);
 const uint16_t BIANCO = rgb(255, 255, 255);
+const uint16_t COLORE_SFONDO = rgb(SFONDO_ROSSO, SFONDO_VERDE, SFONDO_BLU);   // fondo del cielo: i numeri sono in config_sirio.h e config_vega.h
 const uint16_t ROSSO_STELLA = rgb(255, 0, 0);
 const uint16_t AZZURRO_STELLA   = rgb(102, 255, 255);
 const uint16_t GIALLO_STELLA    = rgb(255, 255, 51);

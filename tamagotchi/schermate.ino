@@ -3,7 +3,7 @@
 // =====================================================================
 
 void schermataHome(M5Canvas& c) {
-  c.fillScreen(NERO);
+  c.fillScreen(COLORE_SFONDO);
   disegnaCielo(c, orientamento, orientamentoPrecedente);
   disegnaCostellazione(c, LARGHEZZA / 2 + (int)(dragX.valore + aspetto.spostamentoX), ALTEZZA / 2 + (int)(dragY.valore + aspetto.spostamentoY), aspettoPiccola);
   disegnaStella(c, LARGHEZZA / 2 + (int)(dragX.valore + aspetto.spostamentoX), ALTEZZA / 2 + (int)(dragY.valore + aspetto.spostamentoY), aspetto);

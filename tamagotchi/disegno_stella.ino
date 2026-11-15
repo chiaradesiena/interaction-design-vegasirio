@@ -30,7 +30,7 @@ void disegnaStella(M5Canvas& c, int cx, int cy, const AspettoStella& a) {
       float rf = raggioMax * densitaStella(i * passo, j * passo, a);
       if (rf < 0.25f) continue;                       // troppo piccolo: niente puntino
       int x = cx + i * passo, y = cy - j * passo;
-      c.fillRect(x - passo / 2, y - passo / 2, passo, passo, NERO);   // copre il cielo dietro la stella
+      c.fillRect(x - passo / 2, y - passo / 2, passo, passo, COLORE_SFONDO);   // copre il cielo dietro la stella
       c.fillCircle(x, y, (int)(rf + 0.5f), a.colore); // raggio 0 = un solo pixel
     }
   }

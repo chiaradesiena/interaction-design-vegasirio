@@ -13,6 +13,9 @@ const TipoOrbita   ORBITA_TIPO   = ORBITA_CASUALE;      // movimento: orbite cas
 const TipoFesta    FESTA_TIPO    = FESTA_RIMBALZI;      // energia al 100%: rimbalzi fra alto e basso (FESTA_SALTI_BORDO = come Sirio)
 
 // Cielo
+const uint8_t SFONDO_ROSSO = 0;    // colore dello sfondo: quanto rosso (0-255). Tutti e tre a 0 = nero
+const uint8_t SFONDO_VERDE = 0;    // quanto verde (0-255)
+const uint8_t SFONDO_BLU   = 0;    // quanto blu (0-255)
 const float MOTION_BLUR                = 0.2;   // lunghezza della scia (0 = niente scia, 2 = scia doppia)
 
 // Stella

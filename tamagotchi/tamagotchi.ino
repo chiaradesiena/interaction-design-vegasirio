@@ -36,7 +36,7 @@ void setup() {
 
   CoreS3.Display.setBrightness(LUMINOSITA_SCHERMO);
   CoreS3.Speaker.setVolume(volumeCorrente);   // livello di partenza: VOLUME_LIVELLO_INIZIALE
-  CoreS3.Display.fillScreen(NERO);
+  CoreS3.Display.fillScreen(COLORE_SFONDO);
 
   tela.setColorDepth(16);
   if (!tela.createSprite(LARGHEZZA, ALTEZZA)) {   // se manca memoria si ripiega sugli 8 bit
