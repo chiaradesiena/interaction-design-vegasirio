@@ -64,7 +64,60 @@ struct Bisogni {
   float salute;          // media dei 4 bisogni
 };
 
-enum Schermata { HOME, ANIMAZIONE_COSTELLAZIONE, MENU };
+// Messaggio radio di Unisono: ogni stella lo manda a tutti quelli vicini (broadcast).
+// "packed" = i campi stanno attaccati, senza spazi vuoti, così ogni dispositivo lo legge uguale.
+struct __attribute__((packed)) MessaggioUnisono {
+  char firma[4];         // "UNIS": serve a riconoscere i messaggi delle nostre stelle
+  uint8_t versione;      // cambia se un giorno cambia la forma del messaggio
+  char nome[10];         // nome della stella ("Sirio", "Vega", ...)
+  uint16_t colore;       // colore della stella adesso (RGB565)
+  uint8_t punte;         // numero di punte
+  float vita;            // larghezza fra le punte (come STELLA_VITA)
+  float affilatura;      // come STELLA_AFFILATURA
+  uint8_t disponibile;   // 1 = è in salute e può entrare in Unisono
+  uint32_t contatore;    // quanti messaggi ha mandato (serve a riconoscere un riavvio)
+  uint32_t accesaDaMs;   // da quanti ms è accesa: il suo orologio, per andare a tempo col "direttore"
+  char ritmo[32];        // il suo ritmo di 0 e 1 (lungo ORCHESTRA_PASSI = 32), così le altre la illuminano a tempo
+};
+
+// Una stella vicina sentita dalla radio
+struct StellaVicina {
+  uint8_t mac[6];        // indirizzo della sua radio (come una targa)
+  char nome[10];
+  uint16_t colore;
+  uint8_t punte;
+  float vita, affilatura;
+  bool disponibile;
+  int rssi;             // forza dell'ultimo segnale (-40 = attaccati, -90 = lontanissimi)
+  int conferme;          // messaggi forti di fila (sopra UNISONO_RSSI_SOGLIA)
+  uint32_t ultimoMs;     // quando è arrivato l'ultimo messaggio (millis)
+  uint32_t confermataMs; // quando ha raggiunto UNISONO_CONFERME (0 = non ancora)
+  int32_t differenzaMs;  // quanto il suo orologio è avanti rispetto al nostro, in ms
+  char ritmo[32];        // il suo ritmo di 0 e 1
+};
+
+// Una stella della galassia di Unisono (vera, sentita dalla radio, oppure finta per le prove)
+struct StellaGalassia {
+  uint8_t mac[6];        // indirizzo della sua radio (le finte hanno tutti zeri)
+  bool finta;
+  char nome[10];
+  uint16_t colore;
+  uint8_t punte;
+  float vita, affilatura;
+  uint32_t arrivoMs;     // quando si è aggiunta alla galassia
+  float posto;           // dove sta adesso lungo il suo braccio (0 = inizio, 1 = la stella più lontana); si sposta piano quando ne arriva un'altra
+  float luce;            // 1 = appena illuminata (suona, o ci passa il braccio di luce), 0 = normale
+  int indiceFinta;       // per le finte: quale delle UNISONO_FINTE_* (-1 = stella vera)
+  int notaCorrente;      // per le finte: quale delle sue note suona la prossima volta
+  char ritmo[32];        // il suo ritmo di 0 e 1
+};
+
+// A che punto è Unisono
+enum FaseUnisono { UNISONO_NO,           // vita normale: la stella chiama e aspetta di incontrarne un'altra
+                   UNISONO_ATTESA,       // incontrata una stella: per UNISONO_ATTESA_S si aspetta se ne arrivano altre
+                   UNISONO_ANIMAZIONE }; // la galassia, per UNISONO_DURATA_S
+
+enum Schermata { HOME, ANIMAZIONE_COSTELLAZIONE, MENU, UNISONO };
 enum TastoMenu { TASTO_NESSUNO, TASTO_VOLUME_MENO, TASTO_VOLUME_PIU, TASTO_STELLE_MENO, TASTO_STELLE_PIU };   // i tasti del menu delle impostazioni
 
 // Comportamenti che si possono scegliere in config_sirio.h / config_vega.h (e scambiare fra le due stelle)

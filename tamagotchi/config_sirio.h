@@ -58,3 +58,12 @@ const uint16_t FESTA_DURATE_MS[FESTA_NUMERO_NOTE] =   // durata di ogni nota in 
 // Costellazione di Sirio: il Cane Maggiore, 8 stelle: Sirio + 7 piccole (Mirzam, Muliphein, omicron 2, Wezen, Adhara, Aludra, Furud)
 // che si aggiungono una alla volta su un cerchio che gira attorno a Sirio
 const int COSTELLAZIONE_NUMERO_STELLE = 8;      // quante stelle ha la costellazione, Sirio compresa
+
+// Voce di Sirio nell'orchestra di Unisono: grave e lenta, ritmo largo (poche note lunghe).
+// Il ritmo ha ORCHESTRA_PASSI = 32 caselle, scritte a gruppi di 8 (un gruppo = un tempo): 1 = suona, 0 = silenzio.
+// Una battuta intera (32 caselle) è un giro del braccio di luce. A ogni 1 suona la nota successiva dell'elenco.
+const char* const ORCHESTRA_RITMO = "10000000" "00000000" "10000000" "00100000";
+const int   ORCHESTRA_NUMERO_NOTE = 3;          // quante note ha l'elenco qui sotto
+const float ORCHESTRA_NOTE_HZ[ORCHESTRA_NUMERO_NOTE] =   // altezza delle note in Hz (Sirio: la, mi, sol gravi)
+  { 220.00, 164.81, 196.00 };
+const uint16_t ORCHESTRA_DURATA_MS = 900;       // durata di ogni nota, in ms (più alto = note più lunghe e legate)

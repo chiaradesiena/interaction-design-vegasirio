@@ -16,6 +16,13 @@ void schermataMenu(M5Canvas& c) {
   disegnaMenu(c, x0);
 }
 
+// Unisono: il cielo e la galassia delle stelle che si sono incontrate (la logica è in logica_unisono.ino)
+void schermataUnisono(M5Canvas& c) {
+  c.fillScreen(NERO);
+  disegnaCielo(c, orientamento, orientamentoPrecedente);
+  disegnaGalassia(c);
+}
+
 // Animazione della nuova stella della costellazione (10 secondi). La logica (logica_animazione_costellazione.ino)
 // decide cosa si vede; qui si disegna: fondo da nero a bianco e ritorno, cielo, due puntini neri col tratto, stelle.
 void schermataAnimazioneCostellazione(M5Canvas& c) {

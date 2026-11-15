@@ -18,6 +18,9 @@
 #include <math.h>
 #include <Preferences.h>   // memoria permanente della scheda (già inclusa nel core ESP32, nessuna libreria da installare)
 #include <esp_system.h>    // per sapere perché la scheda è ripartita (reset o riaccensione)
+#include <WiFi.h>          // radio della scheda (già inclusa nel core ESP32): serve a Unisono
+#include <esp_now.h>       // ESP-NOW: messaggi diretti fra dispositivi vicini, senza rete Wi-Fi
+#include <esp_wifi.h>      // per scegliere il canale della radio
 
 #include "tipi.h"
 #include "config.h"
@@ -50,6 +53,7 @@ void setup() {
   CoreS3.Display.setTextColor(BIANCO);
   CoreS3.Display.drawCenterString("tienimi fermo...", LARGHEZZA / 2, ALTEZZA / 2);
   calibraGiroscopio();
+  avviaRadio();
   ultimoAggiornamento = millis();
   Serial.println("HOME pronta");
 }
@@ -58,12 +62,14 @@ void loop() {
   CoreS3.update();
 
   leggiSensori();
+  aggiornaRadio();
   aggiornaStato();
 
   switch (schermataCorrente) {
     case HOME: schermataHome(tela); break;
     case ANIMAZIONE_COSTELLAZIONE: schermataAnimazioneCostellazione(tela); break;
     case MENU: schermataMenu(tela); break;
+    case UNISONO: schermataUnisono(tela); break;
   }
   tela.pushSprite(0, 0);
 
@@ -84,6 +90,7 @@ void loop() {
     Serial.printf("costellazione %d/%d   salute al 100%% da %.1f s   prossima stella fra %d min   orologio %d (%u s)\n",
                   costellazioneStelle, COSTELLAZIONE_NUMERO_STELLE, costellazioneTenutaS, minutiAllaProssimaStella(millis()),
                   sensi.orologioOk, (unsigned)sensi.orologioS);
+    stampaRadio();
     fotogrammi = 0;
     ultimaStampa = millis();
   }
