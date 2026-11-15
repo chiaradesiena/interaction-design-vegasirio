@@ -43,6 +43,16 @@ void aggiungiStellaCostellazione(uint32_t ora) {
   Serial.printf("costellazione: stella %d di %d\n", costellazioneStelle, COSTELLAZIONE_NUMERO_STELLE);
 }
 
+// Dal menu: mette subito n stelle (da 1 a COSTELLAZIONE_NUMERO_STELLE), senza animazione, e le salva.
+// Non tocca l'ora dell'ultima stella: la pausa prima della prossima stella resta quella di prima.
+void impostaStelleCostellazione(int n) {
+  costellazioneStelle = constrain(n, 1, COSTELLAZIONE_NUMERO_STELLE);
+  costellazioneStelleMostrate = costellazioneStelle;
+  costellazioneTenutaS = 0;
+  memoria.putInt("cost_stelle", costellazioneStelle);
+  Serial.printf("costellazione dal menu: %d stelle di %d\n", costellazioneStelle, COSTELLAZIONE_NUMERO_STELLE);
+}
+
 // Ogni fotogramma: conta da quanto la salute è al 100%; dopo COSTELLAZIONE_TENUTA_S secondi,
 // se la pausa è finita e la costellazione non è completa, aggiunge una stella.
 void aggiornaCostellazione(uint32_t ora, float dt) {
@@ -69,7 +79,7 @@ int minutiAllaProssimaStella(uint32_t ora) {
 // (Durante l'animazione della nuova stella non viene chiamata: il cerchio resta fermo e i due puntini neri combaciano con le stelle.)
 void aggiornaCerchioCostellazione(uint32_t ora, float dt) {
   costellazioneAngolo = fmodf(costellazioneAngolo + 2 * PI * dt / COSTELLAZIONE_GIRO_S, 2 * PI);
-  if (schermataCorrente == HOME) costellazioneStelleMostrate = costellazioneStelle;   // appena partita l'animazione la stella nuova non si vede ancora
+  if (schermataCorrente != ANIMAZIONE_COSTELLAZIONE) costellazioneStelleMostrate = costellazioneStelle;   // appena partita l'animazione la stella nuova non si vede ancora
   else costellazioneStelleMostrate = costellazioneStelle - 1;
   float bersaglio = festaAttiva ? 0.0f : 1.0f;
   float k = COSTELLAZIONE_VELOCITA_SPARIZIONE * dt;

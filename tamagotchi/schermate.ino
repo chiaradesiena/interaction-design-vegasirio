@@ -7,8 +7,13 @@ void schermataHome(M5Canvas& c) {
   disegnaCielo(c, orientamento, orientamentoPrecedente);
   disegnaCostellazione(c, LARGHEZZA / 2 + (int)(dragX.valore + aspetto.spostamentoX), ALTEZZA / 2 + (int)(dragY.valore + aspetto.spostamentoY), aspettoPiccola);
   disegnaStella(c, LARGHEZZA / 2 + (int)(dragX.valore + aspetto.spostamentoX), ALTEZZA / 2 + (int)(dragY.valore + aspetto.spostamentoY), aspetto);
-  disegnaSlider(c, volumeCorrente);
-  disegnaValori(c, bisogni);
+}
+
+// Menu delle impostazioni: mentre entra o esce si vede ancora la stella dietro, poi solo il pannello
+void schermataMenu(M5Canvas& c) {
+  int x0 = (int)((1.0f - menuApertura.valore) * LARGHEZZA);
+  if (x0 > 0) schermataHome(c);
+  disegnaMenu(c, x0);
 }
 
 // Animazione della nuova stella della costellazione (10 secondi). La logica (logica_animazione_costellazione.ino)

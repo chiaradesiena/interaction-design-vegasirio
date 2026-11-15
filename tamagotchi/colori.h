@@ -17,3 +17,6 @@ const uint16_t ARANCIONE_STELLA = rgb(255, 128, 0);
 const uint16_t COLORI_SALUTE[5] = { BIANCO, AZZURRO_STELLA, GIALLO_STELLA, ARANCIONE_STELLA, ROSSO_STELLA };
 const uint16_t GRIGIO_SLIDER = rgb(70, 70, 70);   // puntini dello slider oltre il livello del volume
 const uint16_t COLORE_VALORI = rgb(200, 200, 200);   // scritta dei valori in alto a sinistra
+const uint16_t GRIGIO_LIVELLO_SPENTO = rgb(70, 70, 70);   // puntini dei livelli del menu oltre il valore scelto
+const uint16_t GRIGIO_MENU =rgb(45, 45, 45);        // puntini di fondo del menu
+const uint16_t GRIGIO_BORDO_MENU = rgb(110, 110, 110);   // linea sottile del bordo del menu mentre entra o esce

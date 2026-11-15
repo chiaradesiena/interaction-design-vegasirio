@@ -9,6 +9,7 @@
 // si disegnano in nero tutte le stelle (le vecchie già unite fra loro, più la nuova).
 void iniziaAnimazioneCostellazione(uint32_t ora) {
   animInizioMs = ora;
+  chiudiMenuSubito();                                // se il menu era aperto, l'animazione gli passa davanti
   schermataCorrente = ANIMAZIONE_COSTELLAZIONE;
   animCentroX = LARGHEZZA / 2 + (int)(dragX.valore + aspetto.spostamentoX);
   animCentroY = ALTEZZA / 2 + (int)(dragY.valore + aspetto.spostamentoY);

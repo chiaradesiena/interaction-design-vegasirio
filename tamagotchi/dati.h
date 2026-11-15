@@ -115,8 +115,15 @@ uint32_t ultimaVoceMs = 0;               // quando il microfono ha sentito l'ult
 bool voceAttiva = false;                 // qualcuno sta parlando (o ha appena smesso)
 
 // Slider del volume
-int volumeCorrente = VOLUME_SUONO;        // 0-255
+int volumeCorrente = VOLUME_LIVELLI[VOLUME_LIVELLO_INIZIALE - 1];   // volume dell'altoparlante adesso (0-255)
 bool sliderInUso = false;                 // il dito sta trascinando lo slider
+
+// Menu delle impostazioni
+bool menuAperto = false;                  // vero = il menu deve stare sullo schermo (dopo lo swipe verso destra)
+Molla menuApertura = {0, 0};              // 0 = menu fuori dallo schermo, 1 = menu al suo posto (elastico)
+int volumeLivello = VOLUME_LIVELLO_INIZIALE;   // livello del volume scelto nel menu (1 = muto ... VOLUME_NUMERO_LIVELLI = massimo)
+TastoMenu menuTastoAcceso = TASTO_NESSUNO;     // il tasto appena toccato, che si illumina per un attimo
+uint32_t menuTastoAccesoMs = 0;                // quando è stato toccato
 
 // Suoni
 int suonoNotaCorrente = -1;               // -1 = fermo, altrimenti numero della prossima nota

@@ -96,6 +96,37 @@ const int   SLIDER_RAGGIO_CURSORE = 6;          // px, grandezza del cursore
 const float SLIDER_NOTA_PROVA_HZ  = 880;        // nota di prova quando si toglie il dito (più alto = più acuta)
 const uint16_t SLIDER_NOTA_PROVA_MS = 150;      // durata della nota di prova, in ms
 
+// Menu delle impostazioni: si apre con uno swipe verso destra, si chiude con uno swipe verso sinistra
+const int   MENU_SWIPE_MIN_PX = 80;             // px che il dito deve percorrere perché lo swipe conti (più alto = serve uno swipe più lungo)
+const float MENU_SWIPE_ORIZZONTALE = 1.5;       // lo swipe deve essere tante volte più orizzontale che verticale (più alto = deve essere più dritto)
+const float MENU_IGNORA_DOPO_CAREZZA_S = 0.5;   // se si stava accarezzando la stella da più di tanti secondi, lo swipe non apre il menu
+const float MENU_FREQUENZA = 2.5;               // velocità con cui il menu entra ed esce (più alto = più rapido)
+const float MENU_SMORZAMENTO = 0.6;             // elasticità: più basso = rimbalza di più, 1 = arriva senza rimbalzo
+const int   MENU_PASSO_GRIGLIA = 16;            // px fra i puntini di fondo del menu (più basso = griglia più fitta)
+const int   MENU_RAGGIO_PUNTINI = 1;            // grandezza dei puntini di fondo, in px
+const int   MENU_TASTO_MENO_X = 40;             // px dal bordo sinistro, centro del tasto -
+const int   MENU_TASTO_PIU_X  = 280;            // px dal bordo sinistro, centro del tasto +
+const int   MENU_TASTO_RAGGIO_PX = 16;          // grandezza del cerchio dei tasti, in px
+const int   MENU_TASTO_AREA_PX = 30;            // zona sensibile attorno al centro del tasto, in px (più alto = più facile da toccare)
+const int   MENU_SEGNO_PX = 7;                  // metà della lunghezza del segno + e -, in px
+const uint32_t MENU_LAMPO_TASTO_MS = 150;       // per quanti ms il tasto toccato resta illuminato
+const int   MENU_ETICHETTA_SOPRA_PX = 26;       // px fra il nome della riga (es. "volume") e la riga
+const int   MENU_PASSO_LIVELLI_PX = 18;         // px fra un puntino del livello e l'altro
+const int   MENU_LIVELLO_RAGGIO_MIN_PX = 2;     // grandezza del primo puntino (il più piccolo), in px
+const int   MENU_LIVELLO_RAGGIO_MAX_PX = 5;     // grandezza dell'ultimo puntino (il più grande), in px
+const int   MENU_VOLUME_Y = 50;                 // px dal bordo alto, altezza della riga del volume
+const int   MENU_STELLE_Y = 115;                // px dal bordo alto, altezza della riga delle stelle della costellazione
+const int   MENU_PARAMETRI_Y = 175;             // px dal bordo alto, altezza della prima riga dei parametri (salute, nutrimento)
+const int   MENU_PARAMETRI_INTERLINEA_PX = 30;  // px fra la prima e la seconda riga dei parametri
+const int   MENU_PARAMETRI_COLONNA_SINISTRA_X = 90;   // px dal bordo sinistro, centro della colonna di sinistra (salute, socialita)
+const int   MENU_PARAMETRI_COLONNA_DESTRA_X = 230;    // px dal bordo sinistro, centro della colonna di destra (nutrimento, energia)
+const float MENU_PARAMETRI_DIMENSIONE_TESTO = 1;      // grandezza del testo dei parametri (1 = piccolo, 2 = doppio: allora allarga le colonne)
+// Volume: 10 livelli; il livello 1 è muto, il 10 è il massimo (il livello di partenza è VOLUME_LIVELLO_INIZIALE in config_sirio.h / config_vega.h)
+const int   VOLUME_NUMERO_LIVELLI = 10;
+const uint8_t VOLUME_LIVELLI[VOLUME_NUMERO_LIVELLI] = { 0, 28, 57, 85, 113, 142, 170, 198, 227, 255 };   // volume dell'altoparlante per ogni livello (0-255)
+const float VOLUME_NOTA_PROVA_HZ = 880;         // nota di prova a ogni tocco di + o - (più alto = più acuta)
+const uint16_t VOLUME_NOTA_PROVA_MS = 120;      // durata della nota di prova, in ms
+
 // Carezza: tocco continuo con il dito che si muove a destra e a sinistra sulla stella = la si sta nutrendo
 const float CAREZZA_DURATA_MIN_S = 1;           // secondi di carezza continua prima che il nutrimento cominci a salire
 const float NUTRIMENTO_AUMENTO_PUNTI_S = 8;     // quanti punti di nutrimento al secondo si guadagnano accarezzando

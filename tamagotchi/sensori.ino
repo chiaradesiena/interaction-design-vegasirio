@@ -35,6 +35,11 @@ void suona(float hz, uint32_t durataMs) {
   fineSuonoMs = millis() + durataMs;
 }
 
+// Volume dell'altoparlante (0-255): lo sceglie il menu, qui lo si manda all'hardware
+void impostaVolume(uint8_t volume) {
+  CoreS3.Speaker.setVolume(volume);
+}
+
 // Misura il volume dell'ambiente (0-1, stessa scala della pagina Microfono dell'esploratore) senza fermare il loop
 void leggiMicrofono(uint32_t ora) {
   if (!micAttivo) {
@@ -100,6 +105,10 @@ void leggiSensori() {
   sensi.premuto = tocco.isPressed();
   sensi.toccoX  = tocco.x;
   sensi.toccoY  = tocco.y;
+  sensi.cliccato = tocco.wasClicked();
+  sensi.swipe   = tocco.wasFlicked();
+  sensi.swipeDX = tocco.distanceX();
+  sensi.swipeDY = tocco.distanceY();
   leggiMicrofono(millis());
 
   float gx, gy, gz;
