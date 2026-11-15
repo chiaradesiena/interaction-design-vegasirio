@@ -58,7 +58,43 @@ void leggiMicrofono(uint32_t ora) {
   sensi.volumeVoce = volumeVoceLetto;
 }
 
+// Giorni dal 1° gennaio 2000 a una data (calendario normale, con gli anni bisestili)
+uint32_t giorniDal2000(int anno, int mese, int giorno) {
+  anno -= mese <= 2;                                              // gennaio e febbraio contano come fine dell'anno prima
+  int era = anno / 400;
+  int annoEra = anno - era * 400;
+  int giornoAnno = (153 * (mese + (mese > 2 ? -3 : 9)) + 2) / 5 + giorno - 1;
+  int giornoEra = annoEra * 365 + annoEra / 4 - annoEra / 100 + giornoAnno;
+  return (uint32_t)(era * 146097 + giornoEra - 730425);         // 730425 = giorni dall'anno 0 al 2000
+}
+
+// Orologio della board (RTC): va a batteria tampone, quindi conta il tempo anche da spenta.
+// Si legge una volta al secondo; se non risponde, orologioOk resta falso e si usa millis().
+void leggiOrologio(uint32_t ora) {
+  if (ultimaLetturaOrologioMs != 0 && ora - ultimaLetturaOrologioMs < OROLOGIO_INTERVALLO_MS) return;
+  ultimaLetturaOrologioMs = ora;
+  sensi.orologioOk = false;
+  if (!CoreS3.Rtc.isEnabled()) {
+    if (!orologioAvvisato) { Serial.println("orologio: non disponibile, la pausa conta solo a board accesa"); orologioAvvisato = true; }
+    return;
+  }
+  auto dt = CoreS3.Rtc.getDateTime();
+  if (dt.date.year < 2000 || dt.date.month < 1 || dt.date.month > 12 || dt.date.date < 1) {
+    // orologio mai regolato: lo si fa partire da una data qualsiasi (OROLOGIO_ANNO_PARTENZA): conta solo il tempo che passa
+    m5::rtc_datetime_t partenza;
+    partenza.date.year = OROLOGIO_ANNO_PARTENZA; partenza.date.month = 1; partenza.date.date = 1; partenza.date.weekDay = 0;
+    partenza.time.hours = 0; partenza.time.minutes = 0; partenza.time.seconds = 0;
+    CoreS3.Rtc.setDateTime(partenza);
+    Serial.printf("orologio: non era regolato, riparte dal 1/1/%d\n", OROLOGIO_ANNO_PARTENZA);
+    return;
+  }
+  sensi.orologioS = giorniDal2000(dt.date.year, dt.date.month, dt.date.date) * 86400UL
+                    + dt.time.hours * 3600UL + dt.time.minutes * 60UL + dt.time.seconds;
+  sensi.orologioOk = true;
+}
+
 void leggiSensori() {
+  leggiOrologio(millis());
   auto tocco = CoreS3.Touch.getDetail();
   sensi.toccato = tocco.wasPressed();
   sensi.premuto = tocco.isPressed();

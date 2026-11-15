@@ -68,6 +68,7 @@ void disegnaPunto(M5Canvas& c, int x, int y, int dim, uint16_t col) {
 void disegnaCielo(M5Canvas& c, const float m[3][3], const float mPrima[3][3]) {
   puntiVisibili = 0;
   for (int i = 0; i < PUNTI_SULLA_SFERA; i++) {
+    if (i >= PUNTI_SULLA_SFERA * cieloFrazione) break;   // il cielo che ritorna dopo l'animazione della costellazione
     const PuntoCielo& p = cielo[i];
     int sx, sy, px, py;
     if (!proietta(m, p, sx, sy)) continue;

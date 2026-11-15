@@ -33,6 +33,8 @@ struct Sensi {
   bool  premuto;                  // vero finché il dito resta appoggiato allo schermo
   float volumeVoce;               // volume sentito dal microfono, da 0 (silenzio) a 1 (fortissimo)
   float scossa;                   // quanto si sta scuotendo il dispositivo, in g oltre la gravità normale (0 = fermo)
+  bool  orologioOk;               // l'orologio della board (RTC) risponde
+  uint32_t orologioS;             // ora dell'orologio, in secondi dal 1° gennaio 2000 (va avanti anche da spento)
 };
 
 // Aspetto della stella: la logica (sezione 5) cambia questi numeri,
@@ -47,6 +49,7 @@ struct AspettoStella {
   float spostamentoX, spostamentoY;   // px, piccolo spostamento dal centro (tremolio)
   float buco;            // frazione del raggio lasciata vuota al centro (0 = nessun buco)
   float luminosita;      // 1 = stella accesa, 0 = spenta (serve al lampeggio)
+  int   passoGriglia;    // px fra un puntino e l'altro (0 = STELLA_PASSO_GRIGLIA; le stelle piccole della costellazione ne usano uno più fitto)
 };
 
 // I bisogni della stella e la sua salute, tutti da 100 (al massimo) a 0 (per niente)
@@ -58,7 +61,7 @@ struct Bisogni {
   float salute;          // media dei 4 bisogni
 };
 
-enum Schermata { HOME };
+enum Schermata { HOME, ANIMAZIONE_COSTELLAZIONE };
 
 // Comportamenti che si possono scegliere in config_sirio.h / config_vega.h (e scambiare fra le due stelle)
 enum TipoAscolto  { ASCOLTO_PALLINO, ASCOLTO_RAGGI };        // voce: la stella diventa un pallino / i raggi si allungano fino ai bordi

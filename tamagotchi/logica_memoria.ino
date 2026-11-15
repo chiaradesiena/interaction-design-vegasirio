@@ -39,6 +39,7 @@ void caricaStato() {
   }
   bisogniSalvati = bisogni;
   livelloSalvato = calcolaLivelloSalute(bisogni.salute);
+  caricaCostellazione((AZZERA_CON_RESET && resetPremuto) || toccoAvvio);   // anche la costellazione (logica_costellazione.ino)
 }
 
 float differenzaMassima(const Bisogni& a, const Bisogni& b) {
