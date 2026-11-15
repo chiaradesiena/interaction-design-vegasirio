@@ -137,6 +137,43 @@ bool pienoPronto = true;                  // può suonare quando il nutrimento a
 bool battitoAttivo = false;               // la carezza è in corso e il battito sta andando
 uint32_t prossimoBattitoMs = 0;           // a che ora suona il prossimo battito
 
+// Radio di Unisono
+bool radioOk = false;                     // la radio ESP-NOW è partita
+StellaVicina stelleVicine[UNISONO_MAX_STELLE];   // le stelle sentite dalla radio
+int numeroStelleVicine = 0;               // quante ce ne sono nell'elenco
+// Lucchetto: i messaggi arrivano "di nascosto" mentre gira il loop; il lucchetto evita
+// che il loop legga l'elenco proprio mentre la radio lo sta scrivendo
+portMUX_TYPE lucchettoVicine = portMUX_INITIALIZER_UNLOCKED;
+uint32_t messaggiInviati = 0;             // quante richieste ha mandato la stella
+uint32_t ultimoInvioMs = 0;               // quando ha mandato l'ultima richiesta
+bool primoInvioFatto = false;             // la prima richiesta parte subito dopo l'accensione
+uint8_t mioMac[6] = { 0, 0, 0, 0, 0, 0 }; // indirizzo della propria radio
+
+// Orchestra di Unisono
+int orchestraUltimoPasso = -1;            // l'ultimo passo del ritmo già suonato (-1 = nessuno)
+int orchestraNotaMia = 0;                 // quale delle proprie note suona la prossima volta
+float luceMia = 0;                        // 1 = la propria stella ha appena suonato, 0 = normale
+int32_t differenzaDirettoreMs = 0;        // quanto l'orologio del direttore è avanti rispetto al nostro (0 = siamo noi il direttore)
+bool sonoDirettore = true;                // vero = è questa stella a dare il tempo
+
+// Unisono
+FaseUnisono unisonoFase = UNISONO_NO;     // a che punto è Unisono
+uint32_t unisonoInizioMs = 0;             // quando è iniziata l'attesa
+uint32_t unisonoAnimazioneMs = 0;         // quando è iniziata l'animazione della galassia
+uint32_t unisonoFineMs = 0;               // quando è finito l'ultimo Unisono (0 = mai, niente pausa)
+bool unisonoInvitata = false;             // per il futuro stato ESPLOSIONE: vero = la stella può entrare in Unisono anche senza salute
+StellaGalassia galassia[UNISONO_MAX_STELLE + UNISONO_MAX_FINTE];   // le altre stelle della galassia
+int numeroGalassia = 0;                   // quante ce ne sono
+float unisonoAngolo = 0;                  // radianti, a che punto del giro è la galassia
+float luceAngolo = 0;                     // radianti, dove punta il braccio di luce
+float bracciVisibili = 0;                 // 0 = bracci spenti, 1 = accesi (si accendono durante l'attesa)
+float luceVisibile = 0;                   // 0 = braccio di luce spento, 1 = acceso (solo durante la galassia)
+// Quello che si disegna (lo calcola la logica, lo usa il disegno)
+AspettoStella aspettoUnisono;             // la stella di questo dispositivo, al centro
+int unisonoCentroX = 0, unisonoCentroY = 0;   // dove sta, in px
+AspettoStella aspettiGalassia[UNISONO_MAX_STELLE + UNISONO_MAX_FINTE];   // le altre stelle
+int galassiaX[UNISONO_MAX_STELLE + UNISONO_MAX_FINTE], galassiaY[UNISONO_MAX_STELLE + UNISONO_MAX_FINTE];   // dove stanno, in px
+
 // Tempo e disegno
 uint32_t ultimoAggiornamento = 0;
 // Numeri "casuali" ripetibili: con lo stesso seme esce sempre lo stesso cielo

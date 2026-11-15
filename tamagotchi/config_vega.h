@@ -56,3 +56,13 @@ const uint16_t FESTA_DURATE_MS[FESTA_NUMERO_NOTE] =   // durata di ogni nota in 
 // Costellazione di Vega: la Lira, 6 stelle: Vega + 5 piccole (epsilon, zeta, delta, Sulafat, Sheliak)
 // che si aggiungono una alla volta su un cerchio che gira attorno a Vega
 const int COSTELLAZIONE_NUMERO_STELLE = 6;      // quante stelle ha la costellazione, Vega compresa
+
+// Voce di Vega nell'orchestra di Unisono: acuta e veloce, ritmo fitto (tante note brevi).
+// Il ritmo ha ORCHESTRA_PASSI = 32 caselle, scritte a gruppi di 8 (un gruppo = un tempo): 1 = suona, 0 = silenzio.
+// Una battuta intera (32 caselle) è un giro del braccio di luce. A ogni 1 suona la nota successiva dell'elenco.
+// (Una copia di questa voce è anche fra le stelle finte, in config_comune.h: se la cambi qui, cambiala anche lì.)
+const char* const ORCHESTRA_RITMO = "10110101" "10101101" "10110101" "11011011";
+const int   ORCHESTRA_NUMERO_NOTE = 8;          // quante note ha l'elenco qui sotto
+const float ORCHESTRA_NOTE_HZ[ORCHESTRA_NUMERO_NOTE] =   // altezza delle note in Hz (Vega: la, do, mi, re, sol acuti)
+  { 880.00, 1046.50, 1318.51, 1174.66, 1567.98, 1318.51, 1174.66, 1046.50 };
+const uint16_t ORCHESTRA_DURATA_MS = 70;        // durata di ogni nota, in ms (più basso = note più secche)

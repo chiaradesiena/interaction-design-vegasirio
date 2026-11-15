@@ -35,6 +35,26 @@ void suona(float hz, uint32_t durataMs) {
   fineSuonoMs = millis() + durataMs;
 }
 
+// Come suona(), ma su un canale scelto (0-7). L'altoparlante mescola da solo fino a 8 canali,
+// come le piste di un mixer: note su canali diversi si sentono insieme (serve all'orchestra di Unisono)
+void suonaSuCanale(float hz, uint32_t durataMs, int canale) {
+  if (micAttivo) {
+    CoreS3.Mic.end();
+    CoreS3.Speaker.begin();
+    micAttivo = false;
+    micHaDati = false;
+    volumeVoceLetto = 0;
+  }
+  CoreS3.Speaker.tone(hz, durataMs, canale);
+  uint32_t fine = millis() + durataMs;
+  if ((int32_t)(fine - fineSuonoMs) > 0) fineSuonoMs = fine;   // il microfono aspetta la fine della nota più lunga
+}
+
+// Volume di un solo canale (0-255), rispetto al volume generale scelto nel menu
+void impostaVolumeCanale(int canale, uint8_t volume) {
+  CoreS3.Speaker.setChannelVolume(canale, volume);
+}
+
 // Volume dell'altoparlante (0-255): lo sceglie il menu, qui lo si manda all'hardware
 void impostaVolume(uint8_t volume) {
   CoreS3.Speaker.setVolume(volume);

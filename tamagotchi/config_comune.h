@@ -244,5 +244,82 @@ const int   ANIM_COST_PUNTO_PX = 3;              // raggio dei puntini neri dell
 const int   ANIM_COST_PUNTO_PRINCIPALE_PX = 5;   // raggio del puntino nero della stella principale, in px (più grande: si riconosce)
 const float COSTELLAZIONE_VELOCITA_SPARIZIONE = 3;   // quanto in fretta le stelle piccole spariscono e ricompaiono durante la festa (più alto = più rapido)
 
+// Unisono — radio (ESP-NOW): le stelle si chiamano e capiscono chi è vicino
+const float UNISONO_CHIAMATA_S = 20;             // ogni quanti secondi la stella manda la sua richiesta di unisono (più basso = si trovano prima)
+const uint32_t UNISONO_VERIFICA_MS = 1000;       // quando sente una stella vicina, si chiamano più spesso: ogni tanti ms (più basso = si confermano prima)
+const int   UNISONO_RSSI_SOGLIA = -60;           // forza minima del segnale per dire "vicina" (-40 = attaccati, -90 = lontanissimi; più vicino a 0 = bisogna stare più vicini)
+const int   UNISONO_CONFERME = 3;                // quanti messaggi forti di fila servono per dire "vicina" (più alto = più sicuro ma più lento)
+const float UNISONO_SILENZIO_MAX_S = 45;         // se una stella tace per tanti secondi, la si considera andata via (deve restare più alto di UNISONO_CHIAMATA_S)
+const float UNISONO_ATTESA_S = 10;               // dopo l'incontro si aspetta tanto, in secondi, per vedere se arrivano altre stelle
+const float UNISONO_SALUTE_MINIMA = 20;          // la stella è "in salute" (disponibile per Unisono) da questa salute in su (0-100)
+const int   UNISONO_MAX_STELLE = 8;              // quante stelle vicine si possono ricordare insieme
+const uint8_t UNISONO_CANALE_RADIO = 1;          // canale radio: deve essere uguale su tutti i dispositivi (1-13)
+const uint8_t UNISONO_VERSIONE_MESSAGGIO = 1;    // non va tarato: cambia solo se cambia la forma del messaggio
+
+// Unisono — lo stato: attesa di UNISONO_ATTESA_S, galassia per UNISONO_DURATA_S, poi socialità al 100% e pausa
+const float UNISONO_DURATA_S = 20;               // secondi di animazione della galassia (dopo l'attesa)
+const float UNISONO_PAUSA_DOPO_S = 300;          // secondi dopo la fine di Unisono prima di poterci rientrare (300 = 5 minuti; per le prove si può abbassare, es. 30)
+const float UNISONO_ARRIVO_S = 1.5;              // secondi che una stella impiega ad arrivare dal bordo al suo posto (e a ripartire alla fine)
+const float UNISONO_GRANDEZZA_PROPRIA = 0.5;     // grandezza della propria stella al centro, rispetto al normale (0.5 = metà)
+const float UNISONO_GRANDEZZA_ALTRE = 0.3;       // grandezza delle altre stelle, rispetto a STELLA_RAGGIO (0.3 = 30%)
+const int   UNISONO_PASSO_GRIGLIA = 4;           // px fra i puntini delle altre stelle (più basso = più dettaglio)
+const int   UNISONO_PASSO_MINIMO = 4;            // px: la propria stella, rimpicciolendo, rende i puntini più fitti fino a qui
+const float UNISONO_DISTANZA_ARRIVO_PX = 230;    // da quanto lontano arrivano (fuori dallo schermo), scivolando lungo il braccio, in px
+const float UNISONO_GIRO_S = 30;                 // secondi per un giro completo della galassia (più alto = più lento; negativo = al contrario)
+const float UNISONO_VELOCITA_POSTO = 2;          // quanto in fretta le stelle si spostano per fare spazio a una nuova (più alto = più rapido)
+
+// Unisono — i bracci della spirale: righe di puntini grigi che partono dalla propria stella e si avvolgono.
+// Le altre stelle stanno sui bracci, a turno (la prima sul primo braccio, la seconda sul secondo, ...)
+const int   UNISONO_BRACCI = 2;                  // quanti bracci ha la spirale
+const float UNISONO_RAGGIO_INTERNO_PX = 28;      // dove iniziano i bracci, in px dal centro
+const float UNISONO_RAGGIO_STELLE_MAX_PX = 110;  // la stella più lontana su un braccio sta a tanti px dal centro
+const float UNISONO_RAGGIO_BRACCI_PX = 170;      // fin dove si disegnano i bracci, in px dal centro (oltre 160 escono dallo schermo)
+const float UNISONO_AVVOLGIMENTO = 2.5;          // quanto si avvolge un braccio fra RAGGIO_INTERNO e RAGGIO_STELLE_MAX, in radianti (più alto = spirale più stretta; negativo = al contrario)
+const float UNISONO_BRACCIO_PASSO_PX = 6;        // px fra un puntino e l'altro del braccio (più basso = braccio più pieno, ma più lento da disegnare)
+const float UNISONO_BRACCIO_LUCE = 0.55;         // luminosità dei puntini vicino al centro (0-1); verso l'esterno si spengono piano
+
+// Unisono — il braccio di luce: una riga di luce che gira dal centro e, passando, illumina le stelle
+const bool  UNISONO_LUCE_ACCENDE_STELLE = false; // true = anche il braccio di luce, passando, illumina le stelle; false = le stelle si illuminano solo quando suonano
+const float UNISONO_LUCE_LUNGHEZZA_PX = 160;     // quanto è lungo, in px dal centro
+const float UNISONO_LUCE_PASSO_PX = 5;           // px fra un puntino e l'altro della luce
+const int   UNISONO_LUCE_SCIA = 6;               // quante righe più deboli lascia dietro di sé (0 = nessuna scia)
+const float UNISONO_LUCE_SCIA_GRADI = 4;         // gradi fra una riga della scia e la successiva (più alto = scia più larga)
+const float UNISONO_LUCE_FORZA = 0.8;            // luminosità della riga principale (0-1)
+const float UNISONO_LUCE_SPEGNIMENTO_S = 0.8;    // secondi in cui una stella illuminata torna normale (più alto = resta accesa di più)
+const float UNISONO_LUCE_CRESCITA = 0.5;         // quanto cresce una stella illuminata (0.5 = 50% più grande)
+const float UNISONO_LUCE_BIANCO = 0.6;           // quanto diventa bianca una stella illuminata (0 = resta del suo colore, 1 = bianca)
+
+// Unisono — stella finta, solo per provare con un dispositivo. Normalmente è spenta (0): Sirio e Vega vanno in Unisono
+// solo quando si trovano davvero vicine (radio), e nella galassia compaiono solo le stelle vere.
+// Per una prova con la sola Sirio si può mettere 1: compare una Vega finta (sulla board di Vega non ha senso usarla).
+const int   UNISONO_MAX_FINTE = 1;               // non va tarato: quante stelle finte sono descritte qui sotto
+const int   UNISONO_STELLE_FINTE = 0;            // quante stelle finte usare (0 = nessuna: si usano solo le stelle vere)
+const float UNISONO_FINTE_PRIMA_S = 30;          // la stella finta "arriva vicino" tanti secondi dopo l'accensione
+const float UNISONO_FINTE_INTERVALLO_S = 4;      // se ce ne fossero più d'una, arriverebbero a tanti secondi l'una dall'altra
+const char* const UNISONO_FINTE_NOMI[UNISONO_MAX_FINTE] = { "Vega" };
+const uint8_t UNISONO_FINTE_COLORI[UNISONO_MAX_FINTE][3] =   // colore della stella finta (rosso, verde, blu: 0-255)
+  { {150, 230, 255} };
+const uint8_t UNISONO_FINTE_PUNTE[UNISONO_MAX_FINTE] = { 7 };
+const float UNISONO_FINTE_VITA[UNISONO_MAX_FINTE] = { 0.3 };
+const float UNISONO_FINTE_AFFILATURA[UNISONO_MAX_FINTE] = { 5 };
+// La voce della stella finta: copia della voce di config_vega.h (ORCHESTRA_RITMO e ORCHESTRA_NOTE_HZ)
+const char* const UNISONO_FINTE_RITMO[UNISONO_MAX_FINTE] = {
+  "10110101" "10101101" "10110101" "11011011" };
+const int   UNISONO_FINTE_MAX_NOTE = 8;          // non va tarato: posti per le note della stella finta
+const int   UNISONO_FINTE_NUMERO_NOTE[UNISONO_MAX_FINTE] = { 8 };   // quante note usa davvero
+const float UNISONO_FINTE_NOTE_HZ[UNISONO_MAX_FINTE][UNISONO_FINTE_MAX_NOTE] = {
+  { 880.00, 1046.50, 1318.51, 1174.66, 1567.98, 1318.51, 1174.66, 1046.50 } };
+const uint16_t UNISONO_FINTE_DURATA_MS[UNISONO_MAX_FINTE] = { 70 };   // durata delle note della stella finta, in ms
+const bool  UNISONO_FINTE_SUONANO = true;        // true = con un solo dispositivo si sentono anche le stelle finte, ognuna sul suo canale; false = si illuminano ma restano mute
+const int   ORCHESTRA_CANALE_MIO = 0;            // non va tarato: canale dell'altoparlante (0-7) per la propria voce; la stella finta usa il canale dopo
+const uint8_t ORCHESTRA_VOLUME_MIO = 255;        // volume della propria voce (0-255), rispetto al volume scelto nel menu
+const uint8_t ORCHESTRA_VOLUME_FINTE = 170;      // volume delle stelle finte (0-255): più basso = la propria stella si sente di più
+
+// Unisono — l'orchestra: tutte le stelle vanno a tempo con un "direttore" (la stella con l'indirizzo radio più basso).
+// Ogni dispositivo suona solo la voce della propria stella (l'altoparlante fa una nota alla volta): l'orchestra nasce nella stanza
+const int   ORCHESTRA_PASSI = 32;                // non va tarato: caselle di un ritmo (i ritmi in config_sirio.h / config_vega.h sono lunghi così)
+const uint32_t ORCHESTRA_PASSO_MS = 125;         // durata di una casella del ritmo, in ms (125 x 32 = una battuta di 4 s = un giro del braccio di luce; più alto = musica più lenta)
+const float ORCHESTRA_FINE_PRIMA_S = 1;          // l'orchestra smette tanti secondi prima della fine della galassia, mentre le stelle ripartono
+
 // Conversioni fisse (non vanno tarate)
 const float GRADI_A_RADIANTI = PI / 180.0;

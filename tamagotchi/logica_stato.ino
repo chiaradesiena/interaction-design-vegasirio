@@ -25,6 +25,7 @@ void aggiornaStato() {
   ultimoAggiornamento = ora;
   if (dt > 0.1) dt = 0.1;                            // evita salti se un fotogramma tarda
   if (schermataCorrente == ANIMAZIONE_COSTELLAZIONE) { aggiornaAnimazioneCostellazione(ora, dt); return; }   // tutto il resto aspetta
+  if (schermataCorrente == UNISONO) { aggiornaUnisono(ora, dt); return; }   // anche durante Unisono
   aggiornaMenu(ora, dt);                             // prima di tutto: col menu aperto i tocchi non arrivano alla stella
   aggiornaOrientamento(dt);
   aggiornaDragStella(dt);
@@ -35,6 +36,7 @@ void aggiornaStato() {
   aggiornaEnergia(ora, dt);
   aggiornaSalute();
   aggiornaCostellazione(ora, dt);
+  controllaIncontroUnisono(ora);
   aggiornaLampeggio(ora);
   aggiornaBuco(dt);
   aggiornaColoreSalute(ora);
