@@ -27,7 +27,8 @@ const uint32_t LAMPEGGIO_PERIODO_MS = 400;      // Vega: un lampeggio completo (
 const float SOCIALITA_VOCE_SOGLIA = 0.60;       // volume del microfono (0-1) da superare perché conti come "qualcuno parla"; più basso = basta una voce più piano
 
 // Richiamo del nutrimento (Vega): quando il nutrimento arriva alla soglia suona "pi-pì, pi-pì", due coppie di note acute, breve + lunga
-const uint8_t VOLUME_SUONO = 70;               // volume dell'altoparlante (0-255)
+const uint8_t VOLUME_SUONO = 70;               // non più usato: il volume ora si sceglie a livelli (VOLUME_LIVELLO_INIZIALE)
+const int VOLUME_LIVELLO_INIZIALE = 3;          // livello del volume all'accensione (1 = muto ... 10 = massimo; i valori sono in VOLUME_LIVELLI)
 const int   SUONO_NUMERO_NOTE = 5;              // quante note ha il suono (devono corrispondere agli elenchi qui sotto)
 const float SUONO_NOTE_HZ[SUONO_NUMERO_NOTE] =      // altezza di ogni nota in Hz (più alto = più acuto; 0 = silenzio)
   { 1046.50, 1318.51, 0, 1046.50, 1318.51 };         // pi, pì, pausa, pi, pì

@@ -35,7 +35,7 @@ void setup() {
   caricaStato();
 
   CoreS3.Display.setBrightness(LUMINOSITA_SCHERMO);
-  CoreS3.Speaker.setVolume(VOLUME_SUONO);
+  CoreS3.Speaker.setVolume(volumeCorrente);   // livello di partenza: VOLUME_LIVELLO_INIZIALE
   CoreS3.Display.fillScreen(NERO);
 
   tela.setColorDepth(16);
@@ -63,6 +63,7 @@ void loop() {
   switch (schermataCorrente) {
     case HOME: schermataHome(tela); break;
     case ANIMAZIONE_COSTELLAZIONE: schermataAnimazioneCostellazione(tela); break;
+    case MENU: schermataMenu(tela); break;
   }
   tela.pushSprite(0, 0);
 

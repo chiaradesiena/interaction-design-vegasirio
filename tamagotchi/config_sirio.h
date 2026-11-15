@@ -27,7 +27,8 @@ const uint32_t LAMPEGGIO_PERIODO_MS = 1600;     // Sirio: un lampeggio completo 
 const float SOCIALITA_VOCE_SOGLIA = 0.50;       // volume del microfono (0-1) da superare perché conti come "qualcuno parla"; più basso = basta una voce più piano
 
 // Richiamo del nutrimento (Sirio): quando il nutrimento arriva alla soglia suona "tu-tuu-tuuu", tre note gravi che scendono e si allungano
-const uint8_t VOLUME_SUONO = 128;               // volume dell'altoparlante (0-255)
+const uint8_t VOLUME_SUONO = 128;               // non più usato: il volume ora si sceglie a livelli (VOLUME_LIVELLO_INIZIALE)
+const int VOLUME_LIVELLO_INIZIALE = 6;          // livello del volume all'accensione (1 = muto ... 10 = massimo; i valori sono in VOLUME_LIVELLI)
 const int   SUONO_NUMERO_NOTE = 3;              // quante note ha il suono (devono corrispondere agli elenchi qui sotto)
 const float SUONO_NOTE_HZ[SUONO_NUMERO_NOTE] =      // altezza di ogni nota in Hz (più basso = più grave; 0 = silenzio)
   { 220.00, 174.61, 146.83 };

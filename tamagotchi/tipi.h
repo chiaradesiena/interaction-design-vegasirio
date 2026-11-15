@@ -31,6 +31,9 @@ struct Sensi {
   bool  toccato;                  // vero solo nel fotogramma in cui il dito appoggia lo schermo
   int   toccoX, toccoY;           // dove (in px) ha toccato
   bool  premuto;                  // vero finché il dito resta appoggiato allo schermo
+  bool  cliccato;                 // vero solo nel fotogramma in cui il dito si stacca dopo un tocco breve, senza scorrere
+  bool  swipe;                   // vero solo nel fotogramma in cui finisce uno swipe (dito che scorre veloce e si stacca)
+  int   swipeDX, swipeDY;         // strada fatta dal dito nello swipe, in px (DX positivo = verso destra)
   float volumeVoce;               // volume sentito dal microfono, da 0 (silenzio) a 1 (fortissimo)
   float scossa;                   // quanto si sta scuotendo il dispositivo, in g oltre la gravità normale (0 = fermo)
   bool  orologioOk;               // l'orologio della board (RTC) risponde
@@ -61,7 +64,8 @@ struct Bisogni {
   float salute;          // media dei 4 bisogni
 };
 
-enum Schermata { HOME, ANIMAZIONE_COSTELLAZIONE };
+enum Schermata { HOME, ANIMAZIONE_COSTELLAZIONE, MENU };
+enum TastoMenu { TASTO_NESSUNO, TASTO_VOLUME_MENO, TASTO_VOLUME_PIU, TASTO_STELLE_MENO, TASTO_STELLE_PIU };   // i tasti del menu delle impostazioni
 
 // Comportamenti che si possono scegliere in config_sirio.h / config_vega.h (e scambiare fra le due stelle)
 enum TipoAscolto  { ASCOLTO_PALLINO, ASCOLTO_RAGGI };        // voce: la stella diventa un pallino / i raggi si allungano fino ai bordi
