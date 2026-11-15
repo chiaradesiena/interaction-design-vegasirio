@@ -62,6 +62,7 @@ void loop() {
 
   switch (schermataCorrente) {
     case HOME: schermataHome(tela); break;
+    case ANIMAZIONE_COSTELLAZIONE: schermataAnimazioneCostellazione(tela); break;
   }
   tela.pushSprite(0, 0);
 
@@ -79,6 +80,9 @@ void loop() {
                   (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getMinFreeHeap(), (unsigned)ESP.getPsramSize(), ascolto, micAttivo);
     Serial.printf("scossa %.2f g   scuotendo %d   tempo scossa %.1f s   statica %d   attivita %.2f   festa %d\n",
                   sensi.scossa, scossaRecente, tempoScossaS, staticaEnergia, attivita, festaAttiva);
+    Serial.printf("costellazione %d/%d   salute al 100%% da %.1f s   prossima stella fra %d min   orologio %d (%u s)\n",
+                  costellazioneStelle, COSTELLAZIONE_NUMERO_STELLE, costellazioneTenutaS, minutiAllaProssimaStella(millis()),
+                  sensi.orologioOk, (unsigned)sensi.orologioS);
     fotogrammi = 0;
     ultimaStampa = millis();
   }

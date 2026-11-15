@@ -24,6 +24,7 @@ void aggiornaStato() {
   float dt = (ora - ultimoAggiornamento) / 1000.0;   // secondi dall'ultimo fotogramma
   ultimoAggiornamento = ora;
   if (dt > 0.1) dt = 0.1;                            // evita salti se un fotogramma tarda
+  if (schermataCorrente == ANIMAZIONE_COSTELLAZIONE) { aggiornaAnimazioneCostellazione(ora, dt); return; }   // tutto il resto aspetta
   aggiornaOrientamento(dt);
   aggiornaDragStella(dt);
   aggiornaRespiroCielo(ora);
@@ -32,6 +33,7 @@ void aggiornaStato() {
   aggiornaSocialita(ora, dt);
   aggiornaEnergia(ora, dt);
   aggiornaSalute();
+  aggiornaCostellazione(ora, dt);
   aggiornaLampeggio(ora);
   aggiornaBuco(dt);
   aggiornaColoreSalute(ora);
@@ -46,6 +48,8 @@ void aggiornaStato() {
   aggiornaAspettoStella(ora);
   applicaMovimento();
   applicaAscolto();
+  aggiornaCerchioCostellazione(ora, dt);
+  applicaCostellazione();
   salvaStato(ora);
   suonoInCorso = suonoNotaCorrente >= 0 || pienoNotaCorrente >= 0 || festaNotaCorrente >= 0 || sliderInUso;   // il microfono aspetta finché c'è un suono
 }

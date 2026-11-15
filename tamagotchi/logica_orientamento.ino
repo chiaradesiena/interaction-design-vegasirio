@@ -23,10 +23,16 @@ void raddrizzaOrientamento() {
 // Fa avanzare una molla verso "obiettivo".
 // frequenza = rigidità (oscillazioni al secondo), smorzamento = quanto frena (1 = niente rimbalzo)
 void aggiornaMolla(Molla& m, float obiettivo, float frequenza, float smorzamento, float dt) {
+  // Il tempo si divide in passi piccoli: con passi lunghi (fotogrammi lenti, sotto i 14 FPS circa) la molla
+  // "impazziva" e il valore cresceva senza fine, fino a bloccare la scheda.
+  int passi = (int)(dt / MOLLA_PASSO_MAX_S) + 1;
+  float h = dt / passi;
   float w = 2 * PI * frequenza;
-  float accelerazione = w * w * (obiettivo - m.valore) - 2 * smorzamento * w * m.velocita;
-  m.velocita += accelerazione * dt;
-  m.valore   += m.velocita * dt;
+  for (int i = 0; i < passi; i++) {
+    float accelerazione = w * w * (obiettivo - m.valore) - 2 * smorzamento * w * m.velocita;
+    m.velocita += accelerazione * h;
+    m.valore   += m.velocita * h;
+  }
 }
 
 // Se il dispositivo gira di un certo angolo, il cielo (visto da dentro)

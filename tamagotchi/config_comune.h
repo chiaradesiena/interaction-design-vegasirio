@@ -25,6 +25,7 @@ const int   CAMPIONI_CALIBRAZIONE = 100;        // letture all'accensione, a dis
 const float SEGNO_ASSE_X = 1;                   // inclinare avanti/indietro
 const float SEGNO_ASSE_Y = 1;                   // girare a destra/sinistra
 const float SEGNO_ASSE_Z = 1;                   // ruotare come un volante
+const float MOLLA_PASSO_MAX_S = 0.01;           // le molle (cielo, drag, carezza) si calcolano a passi di al massimo tanti secondi: evita che "impazziscano" quando gli FPS sono bassi (non serve cambiarlo)
 
 // Elasticità e motion blur del cielo
 const float ELASTICO_CIELO_FREQUENZA   = 3.0;   // più alto = cielo più rigido, segue subito il movimento
@@ -61,7 +62,7 @@ const float BUCO_VELOCITA  = 3;                 // quanto in fretta il buco camb
 // Bisogni e salute: ogni bisogno va da 100 (soddisfatto) a 0 (per niente); la salute è la media dei 4
 const float BISOGNO_MAX = 100;                  // valore di un bisogno completamente soddisfatto
 const float NUTRIMENTO_DECADIMENTO = 1;         // quanti punti percentuali perde il nutrimento a ogni intervallo
-const float NUTRIMENTO_INTERVALLO_S = 5;        // ogni quanti secondi perde quei punti (1 punto ogni 5 s = da 100 a 0 in 500 s)
+const float NUTRIMENTO_INTERVALLO_S = 15;       // ogni quanti secondi perde quei punti (1 punto ogni 15 s = da 100 a 0 in 1500 s, con MOLTIPLICATORE_TEMPO 0.5 circa 50 minuti)
 const float MOLTIPLICATORE_TEMPO = 0.5;           // velocità dei bisogni: 1 = normale; 10 = dieci volte più veloci (utile per le prove)
 const float SALUTE_SOGLIE[4] = { 80, 60, 40, 20 };   // salute da qui in su: 80 = livello bianco, 60 = azzurro, 40 = giallo, 20 = arancione; sotto 20 = rosso
 const float SALUTE_DURATA_COLORE_MS = 1000;     // durata della sfumatura quando cambia il colore (0 = cambio netto)
@@ -140,7 +141,7 @@ const int   VALORI_INTERLINEA_PX = 12;          // px fra una riga e l'altra (al
 // Energia: scende col tempo come il nutrimento e sale scuotendo il dispositivo; con energia bassa la stella sta ferma
 const float ENERGIA_INIZIALE = 50;              // energia all'accensione (0-100)
 const float ENERGIA_DECADIMENTO = 1;            // quanti punti percentuali perde l'energia a ogni intervallo
-const float ENERGIA_INTERVALLO_S = 5;           // ogni quanti secondi perde quei punti (come il nutrimento)
+const float ENERGIA_INTERVALLO_S = 15;          // ogni quanti secondi perde quei punti (come il nutrimento)
 const float ENERGIA_SCOSSA_SOGLIA_G = 0.8;      // quanto forte si deve scuotere (g oltre la gravità normale); più alto = serve scuotere più forte
 const float ENERGIA_SCOSSA_DURATA_MIN_S = 2;    // secondi di scuotimento continuo prima che l'energia cominci a salire
 const uint16_t ENERGIA_SCOSSA_PAUSA_MS = 300;   // se non si scuote per più di così, i secondi ripartono da zero
@@ -183,6 +184,34 @@ const float VEGA_FESTA_MARGINE_PX = 30;        // distanza del centro della stel
 
 // Suono della festa (le note sono in config_sirio.h / config_vega.h)
 const uint16_t FESTA_PAUSA_MS = 20;            // silenzio fra una nota e l'altra, in ms
+
+// Costellazione: con la salute al 100% per un po' si aggiunge una stella (le stelle sono in config_sirio.h / config_vega.h)
+const float COSTELLAZIONE_SALUTE_SOGLIA = 99.5;  // salute da raggiungere (99.5 = la scritta in alto mostra già "100%")
+const float COSTELLAZIONE_TENUTA_S = 5;          // secondi in cui la salute deve restare lì
+const uint32_t COSTELLAZIONE_PAUSA_S = 3600;   // secondi minimi fra una stella e la prossima (3600 = 1 ora; per le prove si può abbassare, es. 30)
+const bool  COSTELLAZIONE_AZZERA_CON_RESET = true;   // true = il reset (come per i bisogni) riporta la costellazione alla sola stella principale
+const uint32_t OROLOGIO_INTERVALLO_MS = 1000;    // ogni quanto leggere l'orologio della board (non serve cambiarlo)
+const int   OROLOGIO_ANNO_PARTENZA = 2026;       // se l'orologio della board non è mai stato regolato, riparte dal 1° gennaio di quest'anno (non serve l'ora vera)
+// Le stelle piccole stanno su un cerchio che gira attorno alla stella principale, alla stessa distanza fra loro,
+// unite da tratti sottili: la prima alla principale, ognuna alla precedente; a costellazione completa il cerchio si chiude
+const float COSTELLAZIONE_GRANDEZZA = 0.2;       // grandezza delle stelle piccole rispetto alla principale (0.2 = 20%)
+const int   COSTELLAZIONE_PASSO_GRIGLIA = 3;     // px fra i puntini delle stelle piccole (più basso = più dettaglio; la principale usa 8)
+const float COSTELLAZIONE_RAGGIO_CERCHIO_PX = 95;   // distanza delle stelle piccole dal centro della principale, in px
+const float COSTELLAZIONE_GIRO_S = 60;           // secondi per un giro completo del cerchio (più alto = più lento; negativo = gira al contrario)
+const float COSTELLAZIONE_LUCE_TRATTO = 0.6;     // luminosità dei tratti rispetto al colore della stella (0-1)
+// Animazione quando si aggiunge una stella (10 secondi). Ogni numero è il secondo in cui FINISCE quel passaggio
+const float ANIM_COST_FINE_SCOMPARSA_S = 1;      // 0-1 s: la stella si rimpicciolisce e scompare
+const float ANIM_COST_FINE_BIANCO_S = 2;         // 1-2 s: lo schermo diventa bianco
+const float ANIM_COST_FINE_PUNTI_S = 3;          // 2-3 s: due puntini neri lampeggiano
+const float ANIM_COST_FINE_TRATTO_S = 5;         // 3-5 s: fra i due puntini si disegna il tratto sottile
+const float ANIM_COST_FINE_NERO_S = 6;           // 5-6 s: lo schermo torna nero
+const float ANIM_COST_FINE_CIELO_S = 7;          // 6-7 s: ritornano le stelle di fondo, un punto alla volta
+const float ANIM_COST_DURATA_S = 10;             // 7-10 s: ricompare la stella lampeggiando con la stella nuova; poi finisce
+const uint32_t ANIM_COST_LAMPEGGIO_PUNTI_MS = 250;   // ogni quanti ms i puntini neri si accendono o si spengono (più basso = più veloce)
+const uint32_t ANIM_COST_LAMPEGGIO_STELLA_MS = 500;  // ogni quanti ms la stella si accende o si spegne quando ricompare
+const int   ANIM_COST_PUNTO_PX = 3;              // raggio dei puntini neri delle stelle piccole, in px
+const int   ANIM_COST_PUNTO_PRINCIPALE_PX = 5;   // raggio del puntino nero della stella principale, in px (più grande: si riconosce)
+const float COSTELLAZIONE_VELOCITA_SPARIZIONE = 3;   // quanto in fretta le stelle piccole spariscono e ricompaiono durante la festa (più alto = più rapido)
 
 // Conversioni fisse (non vanno tarate)
 const float GRADI_A_RADIANTI = PI / 180.0;

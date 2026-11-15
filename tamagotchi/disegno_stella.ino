@@ -17,9 +17,12 @@ float densitaStella(float dx, float dy, const AspettoStella& a) {
 // Griglia di puntini: più il punto è dentro la stella, più il puntino è grande
 void disegnaStella(M5Canvas& c, int cx, int cy, const AspettoStella& a) {
   if (a.luminosita <= 0) return;                      // fase "spenta" del lampeggio: la stella non si vede
-  const int passo = STELLA_PASSO_GRIGLIA;
+  const int passo = a.passoGriglia > 0 ? a.passoGriglia : STELLA_PASSO_GRIGLIA;   // le stelle piccole usano puntini più fitti
   const float raggioMax = passo / 2.0f;
+  if (!isfinite(a.raggio) || a.raggio <= 0) return;  // grandezza sbagliata (es. molla impazzita): meglio non disegnare che bloccarsi
   int n = (int)(a.raggio * max(STELLA_ALONE, 1.0f) / passo) + 1;
+  int nMax = (LARGHEZZA + ALTEZZA) / passo + 1;       // oltre questo i puntini sarebbero comunque fuori dallo schermo
+  if (n > nMax) n = nMax;
   for (int i = -n; i <= n; i++) {
     for (int j = -n; j <= n; j++) {
       float bucoPx = a.buco * a.raggio;                // il buco lascia vedere il cielo: qui non si disegna niente

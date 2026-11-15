@@ -22,7 +22,7 @@ const float STELLA_AFFILATURA     = 2;          // più alto = punte più sottil
 // Bisogni
 const float NUTRIMENTO_INIZIALE = 40;          // nutrimento all'accensione (0-100)
 const float SOCIALITA_INIZIALE = 51;           // socialità all'accensione (0-100)
-const float SOCIALITA_INTERVALLO_S = 8;         // ogni quanti secondi perde quei punti (Sirio: 8 s = più piano del nutrimento che usa 5 s; più basso = scende più in fretta)
+const float SOCIALITA_INTERVALLO_S = 24;        // ogni quanti secondi perde quei punti (Sirio: 24 s = più piano del nutrimento che usa 15 s; più basso = scende più in fretta)
 const uint32_t LAMPEGGIO_PERIODO_MS = 1600;     // Sirio: un lampeggio completo (acceso + spento) dura tanto, in ms; più alto = più lento
 const float SOCIALITA_VOCE_SOGLIA = 0.50;       // volume del microfono (0-1) da superare perché conti come "qualcuno parla"; più basso = basta una voce più piano
 
@@ -53,3 +53,7 @@ const float FESTA_NOTE_HZ[FESTA_NUMERO_NOTE] =        // altezza di ogni nota in
   { 116.54, 0, 116.54, 1396.91, 116.54 };
 const uint16_t FESTA_DURATE_MS[FESTA_NUMERO_NOTE] =   // durata di ogni nota in ms
   { 677, 328, 490, 142, 120 };
+
+// Costellazione di Sirio: il Cane Maggiore, 8 stelle: Sirio + 7 piccole (Mirzam, Muliphein, omicron 2, Wezen, Adhara, Aludra, Furud)
+// che si aggiungono una alla volta su un cerchio che gira attorno a Sirio
+const int COSTELLAZIONE_NUMERO_STELLE = 8;      // quante stelle ha la costellazione, Sirio compresa

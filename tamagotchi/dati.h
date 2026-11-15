@@ -76,7 +76,30 @@ int festaNotaCorrente = -1;                      // -1 = suono fermo, altrimenti
 uint32_t festaProssimaNotaMs = 0;                // a che ora deve partire la prossima nota
 float profondita = 0;                            // variazione di grandezza dovuta alla profondità (0 = nessuna)
 
+// Costellazione
+int costellazioneStelle = 1;                     // quante stelle ha la costellazione (1 = solo la stella principale)
+uint32_t costellazioneUltimaS = 0;               // ora dell'orologio quando si è aggiunta l'ultima stella (0 = mai)
+uint32_t costellazioneUltimaMs = 0;              // stessa cosa in millis(), se l'orologio non risponde
+bool costellazioneInQuestaAccensione = false;    // si è aggiunta una stella da quando la board è accesa
+float costellazioneTenutaS = 0;                  // secondi di fila con la salute al 100%
+float costellazioneAngolo = 0;                   // radianti, a che punto del giro è il cerchio delle stelle piccole
+float costellazioneVisibile = 1;                 // 1 = stelle piccole visibili, 0 = nascoste (durante la festa)
+AspettoStella aspettoPiccola;                    // aspetto delle stelle piccole (lo calcola la logica, lo usa il disegno)
+int costellazioneStelleMostrate = 1;             // quante stelle si disegnano (durante l'animazione la nuova arriva solo alla fine)
+// Animazione della nuova stella
+uint32_t animInizioMs = 0;                       // quando è partita
+float animBianco = 0;                            // 0 = schermo nero, 1 = bianco
+bool animPuntiAccesi = false;                    // si vedono i puntini neri (le stelle della costellazione)
+bool animNuovoAcceso = true;                     // il puntino della stella nuova è acceso (lampeggia)
+float animTratto = 0;                            // quanto del tratto fra i puntini è disegnato (0-1)
+bool animCielo = true;                           // si disegna il cielo
+bool animStelle = true;                          // si disegnano le stelle
+int animCentroX = 0, animCentroY = 0;            // dove sta la stella principale durante l'animazione, in px
+float cieloFrazione = 1;                         // quanti punti del cielo si disegnano (1 = tutti; serve quando il cielo ritorna)
+
 // Sensori
+uint32_t ultimaLetturaOrologioMs = 0;            // quando si è letto l'orologio l'ultima volta
+bool orologioAvvisato = false;                   // già scritto sul Monitor seriale che l'orologio non c'è
 // Il giroscopio da fermo non segna mai zero esatto: questo errore (offset)
 // si misura all'accensione e poi si sottrae
 float offsetX = 0, offsetY = 0, offsetZ = 0;

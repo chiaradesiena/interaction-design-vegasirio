@@ -22,7 +22,7 @@ const float STELLA_AFFILATURA     = 5;          // più alto = punte più sottil
 // Bisogni
 const float NUTRIMENTO_INIZIALE = 60;          // nutrimento all'accensione (0-100)
 const float SOCIALITA_INIZIALE = 100;           // socialità all'accensione (0-100)
-const float SOCIALITA_INTERVALLO_S = 3;         // ogni quanti secondi perde quei punti (Vega: 3 s = più in fretta del nutrimento che usa 5 s; più basso = scende più in fretta)
+const float SOCIALITA_INTERVALLO_S = 9;         // ogni quanti secondi perde quei punti (Vega: 9 s = più in fretta del nutrimento che usa 15 s; più basso = scende più in fretta)
 const uint32_t LAMPEGGIO_PERIODO_MS = 400;      // Vega: un lampeggio completo (acceso + spento) dura tanto, in ms; più basso = più veloce
 const float SOCIALITA_VOCE_SOGLIA = 0.60;       // volume del microfono (0-1) da superare perché conti come "qualcuno parla"; più basso = basta una voce più piano
 
@@ -51,3 +51,7 @@ const float FESTA_NOTE_HZ[FESTA_NUMERO_NOTE] =        // altezza di ogni nota in
   { 1396.91, 523.25, 0, 2793.83, 1046.50, 1046.50 };
 const uint16_t FESTA_DURATE_MS[FESTA_NUMERO_NOTE] =   // durata di ogni nota in ms
   { 1095, 910, 468, 1072, 1118, 456 };
+
+// Costellazione di Vega: la Lira, 6 stelle: Vega + 5 piccole (epsilon, zeta, delta, Sulafat, Sheliak)
+// che si aggiungono una alla volta su un cerchio che gira attorno a Vega
+const int COSTELLAZIONE_NUMERO_STELLE = 6;      // quante stelle ha la costellazione, Vega compresa
