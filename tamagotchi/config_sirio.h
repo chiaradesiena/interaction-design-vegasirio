@@ -11,6 +11,7 @@ const TipoAscolto  ASCOLTO_TIPO  = ASCOLTO_PALLINO;     // voce: la stella diven
 const TipoCrescita CRESCITA_TIPO = CRESCITA_TRATTI;     // carezza: cresce a tratti (CRESCITA_CONTINUA = come Vega)
 const TipoOrbita   ORBITA_TIPO   = ORBITA_OTTO;         // movimento: disegna un 8 (ORBITA_CASUALE = come Vega)
 const TipoFesta    FESTA_TIPO    = FESTA_SALTI_BORDO;   // energia al 100%: salti lungo il bordo (FESTA_RIMBALZI = come Vega)
+const TipoStatoProprio STATO_PROPRIO_TIPO = PROPRIO_CANE;   // salute alta: ogni tanto diventa un cane (PROPRIO_NESSUNO = nessuna animazione, come Vega per ora)
 
 // Cielo
 const float MOTION_BLUR                = 0.5;   // lunghezza della scia (0 = niente scia, 2 = scia doppia)

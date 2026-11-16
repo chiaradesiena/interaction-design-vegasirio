@@ -91,6 +91,8 @@ void loop() {
                   costellazioneStelle, COSTELLAZIONE_NUMERO_STELLE, costellazioneTenutaS, minutiAllaProssimaStella(millis()),
                   sensi.orologioOk, (unsigned)sensi.orologioS);
     stampaRadio();
+    Serial.printf("stato proprio %d   cane %d   forma %.2f   prossimo cane fra %d s\n",
+                  statoProprio, caneAttivo, caneForma, (int)((int32_t)(prossimoCaneMs - millis()) / 1000));
     fotogrammi = 0;
     ultimaStampa = millis();
   }

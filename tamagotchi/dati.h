@@ -96,6 +96,36 @@ bool animCielo = true;                           // si disegna il cielo
 bool animStelle = true;                          // si disegnano le stelle
 int animCentroX = 0, animCentroY = 0;            // dove sta la stella principale durante l'animazione, in px
 float cieloFrazione = 1;                         // quanti punti del cielo si disegnano (1 = tutti; serve quando il cielo ritorna)
+// Stato proprio e animazione del cane (Sirio)
+bool statoProprio = false;                       // salute alta: si è nello stato proprio
+uint32_t prossimoCaneMs = 0;                     // a che ora può partire il prossimo cane
+bool caneAttivo = false;                         // è in corso l'animazione del cane
+bool caneInRitorno = false;                      // è stata interrotta: sta facendo la giravolta per tornare stella
+uint32_t caneInizioMs = 0;                       // quando è partito il cane
+uint32_t caneRitornoMs = 0;                      // quando è iniziata la giravolta di ritorno
+float caneForma = 0;                             // 0 = stella, 1 = cane
+float caneGiro = 0;                              // 0 = non gira, 1 = gira al massimo
+float caneFormaRitorno = 0, caneGiroRitorno = 0; // forma e giro nel momento dell'interruzione
+float caneRotazione = 0;                         // gradi di giro aggiunti alla stella
+float caneAngolo = 0, caneAngoloRitorno = 0;     // giro della sagoma del cane (0 = dritta) e quello al momento dell'interruzione
+float caneX = 0, caneY = 0;                      // spostamento del cane dal centro, in px
+float caneProfondita = 1;                        // grandezza dovuta alla distanza (meno di 1 = lontano, più di 1 = vicino)
+float caneVerso = 1;                             // 1 = guarda a destra, -1 = a sinistra
+float caneZampe = 0;                             // gradi di piega delle zampe
+float caneInclinazione = 0;                      // gradi di inclinazione quando inciampa
+float caneXRitorno = 0, caneYRitorno = 0, caneProfonditaRitorno = 1;   // dove era al momento dell'interruzione
+// Calcoli del disegno del cane fatti una volta per fotogramma invece che per ogni puntino (più veloce)
+float caneXPezzo[SIRIO_CANE_NUMERO_PEZZI], caneYPezzo[SIRIO_CANE_NUMERO_PEZZI];
+float caneCosPezzo[SIRIO_CANE_NUMERO_PEZZI], caneSinPezzo[SIRIO_CANE_NUMERO_PEZZI];
+float caneCosGiro = 1, caneSinGiro = 0, caneScala = 1, caneVersoDisegno = 1;
+float caneRaggioSagoma = 0;                      // px, cerchio che contiene tutto il cane (fuori non si fanno i calcoli)
+float caneUPasso = -1;                           // a che punto della passeggiata (0-1); -1 = non sta passeggiando
+// Abbaio
+int16_t abbaioCampioni[SIRIO_ABBAIO_MAX_CAMPIONI];   // il suono del "bau", creato una volta sola
+size_t abbaioNumeroCampioni = 0;                 // quanti campioni del suono si usano (0 = non ancora creato)
+int abbaioProssimo = 0;                          // quale abbaio della passeggiata tocca adesso
+int abbaioUfRimasti = 0;                         // quanti "bau" mancano in questo abbaio
+uint32_t abbaioProssimoUfMs = 0;                 // a che ora suona il prossimo "bau"
 
 // Sensori
 uint32_t ultimaLetturaOrologioMs = 0;            // quando si è letto l'orologio l'ultima volta

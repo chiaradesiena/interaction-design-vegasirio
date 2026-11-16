@@ -17,9 +17,12 @@ float densitaStella(float dx, float dy, const AspettoStella& a) {
 // Griglia di puntini: più il punto è dentro la stella, più il puntino è grande
 void disegnaStella(M5Canvas& c, int cx, int cy, const AspettoStella& a) {
   if (a.luminosita <= 0) return;                      // fase "spenta" del lampeggio: la stella non si vede
-  const int passo = a.passoGriglia > 0 ? a.passoGriglia : STELLA_PASSO_GRIGLIA;   // le stelle piccole usano puntini più fitti
-  const float raggioMax = passo / 2.0f;
   if (!isfinite(a.raggio) || a.raggio <= 0) return;  // grandezza sbagliata (es. molla impazzita): meglio non disegnare che bloccarsi
+  bool grigliaCane = a.cane >= SIRIO_CANE_SOGLIA_GRIGLIA;   // Sirio che diventa cane: puntini più fitti (disegno_cane.ino)
+  if (a.cane > 0) preparaCane(a);
+  const int passoStella = a.passoGriglia > 0 ? a.passoGriglia : STELLA_PASSO_GRIGLIA;   // le stelle piccole usano puntini più fitti
+  const int passo = grigliaCane ? SIRIO_CANE_PASSO_GRIGLIA : passoStella;
+  const float raggioMax = grigliaCane ? SIRIO_CANE_PUNTINO_MAX_PX : passo / 2.0f;
   int n = (int)(a.raggio * max(STELLA_ALONE, 1.0f) / passo) + 1;
   int nMax = (LARGHEZZA + ALTEZZA) / passo + 1;       // oltre questo i puntini sarebbero comunque fuori dallo schermo
   if (n > nMax) n = nMax;
@@ -27,9 +30,11 @@ void disegnaStella(M5Canvas& c, int cx, int cy, const AspettoStella& a) {
     for (int j = -n; j <= n; j++) {
       float bucoPx = a.buco * a.raggio;                // il buco lascia vedere il cielo: qui non si disegna niente
       if (bucoPx > 0 && (float)(i * i + j * j) * passo * passo < bucoPx * bucoPx) continue;
-      float rf = raggioMax * densitaStella(i * passo, j * passo, a);
-      if (rf < 0.25f) continue;                       // troppo piccolo: niente puntino
+      float densita = densitaStellaOCane(i * passo, j * passo, a);
       int x = cx + i * passo, y = cy - j * passo;
+      if (grigliaCane) { disegnaPuntinoCane(c, x, y, passo, densita, a.colore, a.cane >= 1); continue; }   // cane: puntini tutti uguali
+      float rf = raggioMax * densita;
+      if (rf < 0.25f) continue;                       // troppo piccolo: niente puntino
       c.fillRect(x - passo / 2, y - passo / 2, passo, passo, NERO);   // copre il cielo dietro la stella
       c.fillCircle(x, y, (int)(rf + 0.5f), a.colore); // raggio 0 = un solo pixel
     }
