@@ -6,5 +6,5 @@
 // =====================================================================
 #pragma once
 
-#define PERSONAGGIO_SIRIO
-// #define PERSONAGGIO_VEGA
+// #define PERSONAGGIO_SIRIO
+#define PERSONAGGIO_VEGA
