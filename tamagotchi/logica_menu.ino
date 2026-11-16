@@ -32,7 +32,7 @@ void cambiaVolume(int passo) {
 
 // Un tocco (dito appoggiato e staccato senza scorrere) su un tasto del menu
 void aggiornaTastiMenu(uint32_t ora) {
-  if (!menuAperto || !sensi.cliccato) return;
+  if (!menuAperto || batteriaAperta || !sensi.cliccato) return;   // con la pagina della batteria davanti i tasti del menu non si toccano
   TastoMenu tasto = TASTO_NESSUNO;
   if (dentroTasto(sensi.toccoX, sensi.toccoY, MENU_TASTO_MENO_X, MENU_VOLUME_Y)) tasto = TASTO_VOLUME_MENO;
   else if (dentroTasto(sensi.toccoX, sensi.toccoY, MENU_TASTO_PIU_X, MENU_VOLUME_Y)) tasto = TASTO_VOLUME_PIU;
@@ -54,6 +54,12 @@ void aggiornaMenu(uint32_t ora, float dt) {
     menuAperto = true;
     schermataCorrente = MENU;
     Serial.println("menu: aperto");
+  } else if (menuAperto && !batteriaAperta && swipeVerso(-1)) {   // un altro swipe a sinistra: pagina della batteria
+    batteriaAperta = true;
+    Serial.println("batteria: aperta");
+  } else if (batteriaAperta && swipeVerso(1)) {                   // uno swipe a destra la chiude e si torna al menu
+    batteriaAperta = false;
+    Serial.println("batteria: chiusa");
   } else if (menuAperto && swipeVerso(1)) {
     menuAperto = false;
     Serial.println("menu: chiuso");
@@ -61,6 +67,8 @@ void aggiornaMenu(uint32_t ora, float dt) {
   aggiornaTastiMenu(ora);
   if (menuTastoAcceso != TASTO_NESSUNO && ora - menuTastoAccesoMs >= MENU_LAMPO_TASTO_MS) menuTastoAcceso = TASTO_NESSUNO;
   aggiornaMolla(menuApertura, menuAperto ? 1.0f : 0.0f, MENU_FREQUENZA, MENU_SMORZAMENTO, dt);
+  aggiornaMolla(batteriaApertura, batteriaAperta ? 1.0f : 0.0f, MENU_FREQUENZA, MENU_SMORZAMENTO, dt);
+  if (!batteriaAperta && batteriaApertura.valore < 0.01f && fabsf(batteriaApertura.velocita) < 0.1f) batteriaApertura = {0, 0};   // finita di uscire
   if (!menuAperto && menuApertura.valore < 0.01f && fabsf(menuApertura.velocita) < 0.1f) {   // finito di uscire: si torna alla stella
     menuApertura = {0, 0};
     schermataCorrente = HOME;
@@ -72,4 +80,6 @@ void aggiornaMenu(uint32_t ora, float dt) {
 void chiudiMenuSubito() {
   menuAperto = false;
   menuApertura = {0, 0};
+  batteriaAperta = false;
+  batteriaApertura = {0, 0};
 }

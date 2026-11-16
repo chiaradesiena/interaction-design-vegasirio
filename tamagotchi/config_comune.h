@@ -121,6 +121,23 @@ const int   MENU_PARAMETRI_INTERLINEA_PX = 30;  // px fra la prima e la seconda 
 const int   MENU_PARAMETRI_COLONNA_SINISTRA_X = 90;   // px dal bordo sinistro, centro della colonna di sinistra (salute, socialita)
 const int   MENU_PARAMETRI_COLONNA_DESTRA_X = 230;    // px dal bordo sinistro, centro della colonna di destra (nutrimento, energia)
 const float MENU_PARAMETRI_DIMENSIONE_TESTO = 1;      // grandezza del testo dei parametri (1 = piccolo, 2 = doppio: allora allarga le colonne)
+
+// Pagina della batteria: si raggiunge con un altro swipe verso sinistra dal menu delle impostazioni
+const uint32_t BATTERIA_INTERVALLO_MS = 2000;   // ogni quanti ms si legge la batteria (non serve cambiarlo)
+const int   BATTERIA_SOGLIA_BASSA = 20;         // da questa percentuale in giù il riempimento diventa rosso
+const int   BATTERIA_X = 74;                    // px dal bordo sinistro, lato sinistro della batteria
+const int   BATTERIA_Y = 50;                    // px dal bordo alto, lato alto della batteria
+const int   BATTERIA_LARGHEZZA_PX = 160;        // larghezza del corpo della batteria, in px
+const int   BATTERIA_ALTEZZA_PX = 84;           // altezza della batteria, in px
+const int   BATTERIA_BORDO_PX = 4;              // spessore del contorno, in px
+const int   BATTERIA_MARGINE_PX = 5;            // spazio fra il contorno e il riempimento, in px
+const int   BATTERIA_PUNTA_LARGHEZZA_PX = 12;   // sporgenza a destra della batteria (il "polo"), in px
+const int   BATTERIA_PUNTA_ALTEZZA_PX = 34;     // altezza del polo, in px
+const int   BATTERIA_SAETTA_PX = 30;            // grandezza della saetta mentre è in carica (mezza altezza), in px
+const int   BATTERIA_PERCENTO_Y = 170;          // px dal bordo alto, altezza della percentuale scritta
+const int   BATTERIA_PERCENTO_TESTO = 4;        // grandezza della percentuale (1 = piccolo, 4 = grande)
+const int   BATTERIA_CARICA_Y = 212;            // px dal bordo alto, altezza della scritta "in carica"
+const int   BATTERIA_CARICA_TESTO = 2;          // grandezza della scritta "in carica"
 // Volume: 10 livelli; il livello 1 è muto, il 10 è il massimo (il livello di partenza è VOLUME_LIVELLO_INIZIALE in config_sirio.h / config_vega.h)
 const int   VOLUME_NUMERO_LIVELLI = 10;
 const uint8_t VOLUME_LIVELLI[VOLUME_NUMERO_LIVELLI] = { 0, 28, 57, 85, 113, 142, 170, 198, 227, 255 };   // volume dell'altoparlante per ogni livello (0-255)

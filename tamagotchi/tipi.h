@@ -38,6 +38,8 @@ struct Sensi {
   float scossa;                   // quanto si sta scuotendo il dispositivo, in g oltre la gravità normale (0 = fermo)
   bool  orologioOk;               // l'orologio della board (RTC) risponde
   uint32_t orologioS;             // ora dell'orologio, in secondi dal 1° gennaio 2000 (va avanti anche da spento)
+  int   batteriaPercento;         // carica della batteria, da 0 a 100
+  bool  inCarica;                 // vero = il cavo è collegato e la batteria si sta caricando
 };
 
 // Aspetto della stella: la logica (sezione 5) cambia questi numeri,

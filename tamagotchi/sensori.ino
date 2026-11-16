@@ -132,8 +132,18 @@ void leggiOrologio(uint32_t ora) {
   sensi.orologioOk = true;
 }
 
+// Batteria: percentuale e stato di carica, letti ogni BATTERIA_INTERVALLO_MS (non serve a ogni fotogramma)
+void leggiBatteria(uint32_t ora) {
+  if (ultimaLetturaBatteriaMs != 0 && ora - ultimaLetturaBatteriaMs < BATTERIA_INTERVALLO_MS) return;
+  ultimaLetturaBatteriaMs = ora;
+  int livello = CoreS3.Power.getBatteryLevel();
+  if (livello >= 0) sensi.batteriaPercento = constrain(livello, 0, 100);   // se non risponde resta l'ultimo valore
+  sensi.inCarica = CoreS3.Power.isCharging();
+}
+
 void leggiSensori() {
   leggiOrologio(millis());
+  leggiBatteria(millis());
   auto tocco = CoreS3.Touch.getDetail();
   sensi.toccato = tocco.wasPressed();
   sensi.premuto = tocco.isPressed();

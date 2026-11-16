@@ -154,6 +154,10 @@ Molla menuApertura = {0, 0};              // 0 = menu fuori dallo schermo, 1 = m
 int volumeLivello = VOLUME_LIVELLO_INIZIALE;   // livello del volume scelto nel menu (1 = muto ... VOLUME_NUMERO_LIVELLI = massimo)
 TastoMenu menuTastoAcceso = TASTO_NESSUNO;     // il tasto appena toccato, che si illumina per un attimo
 uint32_t menuTastoAccesoMs = 0;                // quando è stato toccato
+// Pagina della batteria (dopo il menu)
+bool batteriaAperta = false;                   // vero = la pagina della batteria deve stare sullo schermo (sopra il menu)
+Molla batteriaApertura = {0, 0};               // 0 = pagina fuori dallo schermo, 1 = pagina al suo posto (elastico)
+uint32_t ultimaLetturaBatteriaMs = 0;          // quando si è letta la batteria l'ultima volta
 
 // Suoni
 int suonoNotaCorrente = -1;               // -1 = fermo, altrimenti numero della prossima nota

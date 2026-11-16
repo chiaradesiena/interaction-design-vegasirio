@@ -14,6 +14,7 @@ void schermataMenu(M5Canvas& c) {
   int x0 = (int)((1.0f - menuApertura.valore) * LARGHEZZA);
   if (x0 > 0) schermataHome(c);
   disegnaMenu(c, x0);
+  if (batteriaApertura.valore > 0.001f) disegnaBatteria(c, (int)((1.0f - batteriaApertura.valore) * LARGHEZZA));   // la pagina della batteria scorre sopra il menu
 }
 
 // Unisono: il cielo e la galassia delle stelle che si sono incontrate (la logica è in logica_unisono.ino)
