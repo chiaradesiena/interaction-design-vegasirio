@@ -33,9 +33,21 @@ void disegnaLuceGalassia(M5Canvas& c) {
   }
 }
 
+// I raggi di un'altra stella, riconosciuta dal nome che manda via radio; una stella sconosciuta prende quelli di questa
+const CarattereRaggi& carattereRaggiDi(const char* nome) {
+  if (strcmp(nome, "Sirio") == 0) return RAGGI_SIRIO;
+  if (strcmp(nome, "Vega") == 0) return RAGGI_VEGA;
+  return RAGGI_MIEI;
+}
+
+// Con la versione a raggi (scelta con lo swipe) tutte le stelle della galassia sono a raggi, ognuna col suo carattere
 void disegnaGalassia(M5Canvas& c) {
   disegnaBracci(c);
   disegnaLuceGalassia(c);
-  for (int i = 0; i < numeroGalassia; i++) disegnaStella(c, galassiaX[i], galassiaY[i], aspettiGalassia[i]);
-  disegnaStella(c, unisonoCentroX, unisonoCentroY, aspettoUnisono);
+  for (int i = 0; i < numeroGalassia; i++) {
+    if (stileStella == STILE_RAGGI) disegnaStellaRaggiCon(c, galassiaX[i], galassiaY[i], aspettiGalassia[i], carattereRaggiDi(galassia[i].nome), galassia[i].vita);   // a raggi, col carattere di quella stella
+    else disegnaStella(c, galassiaX[i], galassiaY[i], aspettiGalassia[i]);
+  }
+  if (stileStella == STILE_RAGGI && aspettoUnisono.cane <= 0) disegnaStellaRaggi(c, unisonoCentroX, unisonoCentroY, aspettoUnisono);   // la propria stella nella versione scelta con lo swipe (logica_stile.ino)
+  else disegnaStella(c, unisonoCentroX, unisonoCentroY, aspettoUnisono);
 }

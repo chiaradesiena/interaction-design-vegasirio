@@ -19,13 +19,18 @@ const float MOTION_BLUR                = 0.5;   // lunghezza della scia (0 = nie
 // Stella
 const int   STELLA_NUMERO_PUNTE   = 4;          // Sirio: stella a 4 punte
 const float STELLA_AFFILATURA     = 2;          // più alto = punte più sottili e curve; 2 = angoli morbidi e arrotondati
+const float STELLA_SCALA          = 1.3;        // Sirio: grandezza sullo schermo rispetto a STELLA_RAGGIO (1 = come Vega, 1.3 = 30% più grande); vale per tutte le versioni, il cielo non cambia
+const bool  STILE_FITTO_ATTIVO    = false;      // false = Sirio non ha la versione a puntini fitti (con lo swipe passa subito ai raggi); true = ce l'ha
+
+// Versione a raggi di puntini (disegno_raggi.ino): i numeri sono in config_comune.h (RAGGI_SIRIO)
+const CarattereRaggi RAGGI_MIEI = RAGGI_SIRIO;  // i raggi di questa stella
 
 // Bisogni
 const float NUTRIMENTO_INIZIALE = 40;          // nutrimento all'accensione (0-100)
 const float SOCIALITA_INIZIALE = 51;           // socialità all'accensione (0-100)
 const float SOCIALITA_INTERVALLO_S = 24;        // ogni quanti secondi perde quei punti (Sirio: 24 s = più piano del nutrimento che usa 15 s; più basso = scende più in fretta)
 const uint32_t LAMPEGGIO_PERIODO_MS = 1600;     // Sirio: un lampeggio completo (acceso + spento) dura tanto, in ms; più alto = più lento
-const float SOCIALITA_VOCE_SOGLIA = 0.50;       // volume del microfono (0-1) da superare perché conti come "qualcuno parla"; più basso = basta una voce più piano
+const float SOCIALITA_VOCE_SOGLIA = 0.80;       // volume del microfono (0-1) da superare perché conti come "qualcuno parla"; più basso = basta una voce più piano
 
 // Richiamo del nutrimento (Sirio): quando il nutrimento arriva alla soglia suona "tu-tuu-tuuu", tre note gravi che scendono e si allungano
 const uint8_t VOLUME_SUONO = 128;               // non più usato: il volume ora si sceglie a livelli (VOLUME_LIVELLO_INIZIALE)
@@ -56,9 +61,32 @@ const float FESTA_NOTE_HZ[FESTA_NUMERO_NOTE] =        // altezza di ogni nota in
 const uint16_t FESTA_DURATE_MS[FESTA_NUMERO_NOTE] =   // durata di ogni nota in ms
   { 677, 328, 490, 142, 120 };
 
-// Costellazione di Sirio: il Cane Maggiore, 8 stelle: Sirio + 7 piccole (Mirzam, Muliphein, omicron 2, Wezen, Adhara, Aludra, Furud)
-// che si aggiungono una alla volta su un cerchio che gira attorno a Sirio
-const int COSTELLAZIONE_NUMERO_STELLE = 8;      // quante stelle ha la costellazione, Sirio compresa
+// Costellazione di Sirio: il Cane Maggiore, 10 stelle: Sirio + 9 piccole, disposte come nel disegno vero
+// e unite come nel disegno; si aggiungono una alla volta nell'ordine della tabella e tutta la costellazione gira piano attorno a Sirio.
+// Più stelle ci sono, più la scena (Sirio compreso) rimpicciolisce, così stanno tutte nello schermo (logica_costellazione.ino).
+const int COSTELLAZIONE_NUMERO_STELLE = 10;     // quante stelle ha la costellazione, Sirio compresa (deve essere 1 + le righe della tabella)
+const bool COSTELLAZIONE_DISEGNATA = true;      // true = stelle ai posti della tabella qui sotto; false = su un cerchio, unite a catena (come Vega)
+const bool COSTELLAZIONE_PALLINI = true;        // true = stelle piccole come pallini con un anello di puntini intorno; false = stelline a puntini (halftone)
+const float COSTELLAZIONE_SCALA_PX = 1.5;       // px sullo schermo per ogni unità della tabella, finché la scena non rimpicciolisce (più alto = stelle più lontane da Sirio)
+// Posto di ogni stella piccola rispetto a Sirio, in unità del disegno (x verso destra, y verso il basso), nell'ordine in cui compaiono
+const float COSTELLAZIONE_POSIZIONI[COSTELLAZIONE_NUMERO_STELLE - 1][2] = {
+  { -58, -21 },    // 1 gamma (in alto a sinistra)
+  { -12, -73 },    // 2 theta (in cima)
+  {  18,  27 },    // 3 incrocio del ramo di destra
+  {  72,  34 },    // 4 beta (Mirzam, a destra)
+  {  29, 102 },    // 5 fondo del ramo di destra
+  { -72,  94 },    // 6 a metà del ramo lungo
+  { -95, 127 },    // 7 delta (Wezen)
+  { -70, 165 },    // 8 epsilon (Adhara)
+  {-150, 163 } };  // 9 eta (Aludra, la più lontana)
+// A quale stella è unita ognuna col suo tratto: 0 = Sirio, 1-9 = la stella piccola con quel numero (deve essere già comparsa) , -1 = nessun tratto
+const int COSTELLAZIONE_COLLEGATA_A[COSTELLAZIONE_NUMERO_STELLE - 1] = { 0, 0, 0, 3, 3, 0, 6, 7, 7 };
+// Un secondo tratto, per chiudere i triangoli (-1 = nessuno): theta si unisce anche a gamma
+const int COSTELLAZIONE_COLLEGATA_ANCHE_A[COSTELLAZIONE_NUMERO_STELLE - 1] = { -1, 1, -1, -1, -1, -1, -1, -1, -1 };
+// Grandezza di ogni stella piccola, come nel disegno vero (1 = le più grandi: beta, epsilon, eta; più basso = più piccola). Vale per i pallini e i puntini neri dell'animazione
+const float COSTELLAZIONE_GRANDEZZE[COSTELLAZIONE_NUMERO_STELLE - 1] =
+  // gamma theta incrocio beta fondo  metà delta epsilon eta
+  {  0.6,  0.6,  0.4,    1.0, 0.4,  0.6, 0.8,  1.0,    1.0 };
 
 // Voce di Sirio nell'orchestra di Unisono: grave e lenta, ritmo largo (poche note lunghe).
 // Il ritmo ha ORCHESTRA_PASSI = 32 caselle, scritte a gruppi di 8 (un gruppo = un tempo): 1 = suona, 0 = silenzio.

@@ -36,7 +36,7 @@ float bersaglioCrescitaTratti() {
 
 // Vega: più la carezza è continua, più la stella cresce, fino a occupare CAREZZA_OCCUPAZIONE_MAX dello schermo.
 float bersaglioCrescitaContinua() {
-  float scalaMax = CAREZZA_OCCUPAZIONE_MAX * (ALTEZZA / 2.0f) / (STELLA_RAGGIO * (1 + PULSAZIONE_AMPIEZZA));
+  float scalaMax = CAREZZA_OCCUPAZIONE_MAX * (ALTEZZA / 2.0f) / (STELLA_RAGGIO * STELLA_SCALA * (1 + PULSAZIONE_AMPIEZZA));   // anche ingrandita, la stella non esce dallo schermo
   float k = tempoCrescitaS / VEGA_DURATA_CRESCITA_S;
   if (k > 1.0f) k = 1.0f;
   float bersaglio = 1.0f + (scalaMax - 1.0f) * partenzaArrivoDolci(k);

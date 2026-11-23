@@ -26,6 +26,7 @@ Molla elasticoX = {0, 0}, elasticoY = {0, 0}, elasticoZ = {0, 0};
 Molla dragX = {0, 0}, dragY = {0, 0};
 
 AspettoStella aspetto;
+StileStella stileStella = STILE_PUNTINI;          // come si disegna la stella (logica_stile.ino); all'accensione si riprende dalla memoria
 
 // Bisogni (per ora scendono nutrimento, socialità ed energia) e colore della stella legato alla salute
 Bisogni bisogni = { NUTRIMENTO_INIZIALE, SOCIALITA_INIZIALE, ENERGIA_INIZIALE, BISOGNO_MAX, BISOGNO_MAX };
@@ -86,6 +87,8 @@ float costellazioneAngolo = 0;                   // radianti, a che punto del gi
 float costellazioneVisibile = 1;                 // 1 = stelle piccole visibili, 0 = nascoste (durante la festa)
 AspettoStella aspettoPiccola;                    // aspetto delle stelle piccole (lo calcola la logica, lo usa il disegno)
 int costellazioneStelleMostrate = 1;             // quante stelle si disegnano (durante l'animazione la nuova arriva solo alla fine)
+float costellazioneZoom = -1;                  // grandezza della scena della costellazione, Sirio compreso (1 = normale; -1 = non ancora calcolata)
+float animZoomInizio = 1;                        // grandezza della scena quando è partita l'animazione della stella nuova
 // Animazione della nuova stella
 uint32_t animInizioMs = 0;                       // quando è partita
 float animBianco = 0;                            // 0 = schermo nero, 1 = bianco

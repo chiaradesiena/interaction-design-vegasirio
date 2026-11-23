@@ -8,7 +8,7 @@
 void aggiornaAspettoStella(uint32_t ora) {
   float fase = (ora % PULSAZIONE_PERIODO_MS) / (float)PULSAZIONE_PERIODO_MS;
   aspetto.colore      = rgb((uint8_t)coloreStellaRGB[0], (uint8_t)coloreStellaRGB[1], (uint8_t)coloreStellaRGB[2]);
-  aspetto.raggio      = STELLA_RAGGIO * (1 + PULSAZIONE_AMPIEZZA * sinf(2 * PI * fase)) * scalaCarezza.valore;
+  aspetto.raggio      = STELLA_RAGGIO * STELLA_SCALA * (1 + PULSAZIONE_AMPIEZZA * sinf(2 * PI * fase)) * scalaCarezza.valore;   // STELLA_SCALA: grandezza propria di ogni stella
   aspetto.buco = bucoCorrente;
   aspetto.luminosita = luminositaStella;
   aspetto.spostamentoX = tremolioX;
@@ -27,6 +27,7 @@ void aggiornaStato() {
   if (schermataCorrente == ANIMAZIONE_COSTELLAZIONE) { aggiornaAnimazioneCostellazione(ora, dt); return; }   // tutto il resto aspetta
   if (schermataCorrente == UNISONO) { aggiornaUnisono(ora, dt); return; }   // anche durante Unisono
   aggiornaMenu(ora, dt);                             // prima di tutto: col menu aperto i tocchi non arrivano alla stella
+  aggiornaStile();                                   // swipe verticale: stella a puntini di sempre o puntini fitti (logica_stile.ino)
   aggiornaOrientamento(dt);
   aggiornaDragStella(dt);
   aggiornaRespiroCielo(ora);
@@ -53,8 +54,10 @@ void aggiornaStato() {
   applicaMovimento();
   applicaAscolto();
   aggiornaCerchioCostellazione(ora, dt);
+  aggiornaZoomCostellazione(dt);                     // più stelle = scena più piccola (logica_costellazione.ino)
   applicaCostellazione();
   applicaCane();
+  applicaZoomCostellazione();                        // anche la stella principale rimpicciolisce con la scena
   salvaStato(ora);
   suonoInCorso = suonoNotaCorrente >= 0 || pienoNotaCorrente >= 0 || festaNotaCorrente >= 0 || abbaioUfRimasti > 0 || sliderInUso;   // il microfono aspetta finché c'è un suono
 }

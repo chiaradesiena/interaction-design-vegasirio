@@ -19,6 +19,11 @@ const float MOTION_BLUR                = 0.2;   // lunghezza della scia (0 = nie
 // Stella
 const int   STELLA_NUMERO_PUNTE   = 7;          // Vega: stella a 7 punte
 const float STELLA_AFFILATURA     = 5;          // più alto = punte più sottili e curve
+const float STELLA_SCALA          = 1.0;        // Vega: grandezza sullo schermo rispetto a STELLA_RAGGIO (più alto = più grande; Sirio 1.3); il cielo non cambia
+const bool  STILE_FITTO_ATTIVO    = true;       // true = Vega ha anche la versione a puntini fitti (swipe verso l'alto); false = con lo swipe passa subito ai raggi
+
+// Versione a raggi di puntini (disegno_raggi.ino): i numeri sono in config_comune.h (RAGGI_VEGA)
+const CarattereRaggi RAGGI_MIEI = RAGGI_VEGA;   // i raggi di questa stella
 
 // Bisogni
 const float NUTRIMENTO_INIZIALE = 60;          // nutrimento all'accensione (0-100)
@@ -54,9 +59,28 @@ const float FESTA_NOTE_HZ[FESTA_NUMERO_NOTE] =        // altezza di ogni nota in
 const uint16_t FESTA_DURATE_MS[FESTA_NUMERO_NOTE] =   // durata di ogni nota in ms
   { 1095, 910, 468, 1072, 1118, 456 };
 
-// Costellazione di Vega: la Lira, 6 stelle: Vega + 5 piccole (epsilon, zeta, delta, Sulafat, Sheliak)
-// che si aggiungono una alla volta su un cerchio che gira attorno a Vega
-const int COSTELLAZIONE_NUMERO_STELLE = 6;      // quante stelle ha la costellazione, Vega compresa
+// Costellazione di Vega: la Lira, 6 stelle: Vega (alfa) + 5 piccole, disposte e unite come nel disegno vero
+// (il parallelogramma sotto Vega, con delta doppia); si aggiungono una alla volta nell'ordine della tabella e tutta la costellazione
+// gira piano attorno a Vega. Più stelle ci sono, più la scena (Vega compresa) rimpicciolisce (logica_costellazione.ino).
+const int COSTELLAZIONE_NUMERO_STELLE = 6;      // quante stelle ha la costellazione, Vega compresa (deve essere 1 + le righe della tabella)
+const bool COSTELLAZIONE_DISEGNATA = true;      // true = stelle ai posti della tabella qui sotto; false = su un cerchio, unite a catena
+const bool COSTELLAZIONE_PALLINI = true;        // true = stelle piccole come pallini con un anello di puntini intorno; false = stelline a puntini (halftone)
+const float COSTELLAZIONE_SCALA_PX = 1.5;       // px sullo schermo per ogni unità della tabella, finché la scena non rimpicciolisce (più alto = stelle più lontane da Vega)
+// Posto di ogni stella piccola rispetto a Vega, in unità del disegno (x verso destra, y verso il basso), nell'ordine in cui compaiono
+const float COSTELLAZIONE_POSIZIONI[COSTELLAZIONE_NUMERO_STELLE - 1][2] = {
+  { -28,  33 },    // 1 sotto Vega, dove parte il parallelogramma
+  { -28, 121 },    // 2 beta (Sheliak, in basso a destra)
+  { -65, 143 },    // 3 gamma (Sulafat, in basso a sinistra)
+  { -64,  54 },    // 4 delta, il puntino di sinistra
+  { -58,  51 } };  // 5 delta, il puntino di destra
+// A quale stella è unita ognuna col suo tratto: 0 = Vega, 1-5 = la stella piccola con quel numero (deve essere già comparsa), -1 = nessun tratto
+const int COSTELLAZIONE_COLLEGATA_A[COSTELLAZIONE_NUMERO_STELLE - 1] = { 0, 1, 2, 3, 1 };
+// Un secondo tratto, per chiudere i triangoli (-1 = nessuno)
+const int COSTELLAZIONE_COLLEGATA_ANCHE_A[COSTELLAZIONE_NUMERO_STELLE - 1] = { -1, -1, -1, -1, -1 };
+// Grandezza di ogni stella piccola, come nel disegno vero (1 = grande come le più grandi di Sirio; più basso = più piccola)
+const float COSTELLAZIONE_GRANDEZZE[COSTELLAZIONE_NUMERO_STELLE - 1] =
+  // sotto Vega  beta  gamma  delta sx  delta dx
+  {  0.7,        0.7,  0.7,   0.4,      0.4 };
 
 // Voce di Vega nell'orchestra di Unisono: acuta e veloce, ritmo fitto (tante note brevi).
 // Il ritmo ha ORCHESTRA_PASSI = 32 caselle, scritte a gruppi di 8 (un gruppo = un tempo): 1 = suona, 0 = silenzio.

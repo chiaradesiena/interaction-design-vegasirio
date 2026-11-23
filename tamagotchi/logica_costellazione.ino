@@ -103,7 +103,65 @@ void applicaCostellazione() {
 
 // Dove sta la stella piccola numero i (0 = la prima) su n: tutte alla stessa distanza fra loro sul cerchio
 void posizioneStellaPiccola(int i, int n, int cx, int cy, int& x, int& y) {
+  if (COSTELLAZIONE_DISEGNATA) { posizioneStellaDisegnata(i, cx, cy, x, y); return; }   // costellazione vera (Sirio): posti della tabella
   float angolo = costellazioneAngolo + 2 * PI * i / n;
   x = cx + (int)(COSTELLAZIONE_RAGGIO_CERCHIO_PX * cosf(angolo));
   y = cy + (int)(COSTELLAZIONE_RAGGIO_CERCHIO_PX * sinf(angolo));
+}
+
+// ---- Costellazione disegnata (COSTELLAZIONE_DISEGNATA = true): posti e tratti presi dalle tabelle in config_sirio.h / config_vega.h ----
+
+// Dove sta la stella piccola numero i della tabella: il suo posto, ingrandito di COSTELLAZIONE_SCALA_PX,
+// rimpicciolito con la scena (costellazioneZoom) e girato attorno alla principale insieme a tutta la costellazione
+void posizioneStellaDisegnata(int i, int cx, int cy, int& x, int& y) {
+  float s = COSTELLAZIONE_SCALA_PX * (costellazioneZoom > 0 ? costellazioneZoom : 1.0f);
+  float px = COSTELLAZIONE_POSIZIONI[i][0] * s;
+  float py = COSTELLAZIONE_POSIZIONI[i][1] * s;
+  float ca = cosf(costellazioneAngolo), sa = sinf(costellazioneAngolo);
+  x = cx + (int)(px * ca - py * sa);
+  y = cy + (int)(px * sa + py * ca);
+}
+
+// Con quale stella è unita la stella piccola i (0 = la prima): 0 = la principale, k = la stella piccola numero k.
+// "secondo" = il tratto in più che chiude i triangoli (-1 = nessuno). Sul cerchio: ognuna alla precedente, la prima alla principale.
+int stellaCollegata(int i, bool secondo) {
+  if (!COSTELLAZIONE_DISEGNATA) return secondo ? -1 : i;
+  int k = secondo ? COSTELLAZIONE_COLLEGATA_ANCHE_A[i] : COSTELLAZIONE_COLLEGATA_A[i];
+  if (k > i) return -1;                                  // unita a una stella che non è ancora comparsa: niente tratto
+  return k;
+}
+
+// Dove sta la stella k: 0 = la principale (cx, cy), k = la stella piccola numero k
+void puntoCostellazione(int k, int n, int cx, int cy, int& x, int& y) {
+  if (k <= 0) { x = cx; y = cy; return; }
+  posizioneStellaPiccola(k - 1, n, cx, cy, x, y);
+}
+
+// Grandezza giusta della scena con n stelle (principale compresa): 1 finché la stella più lontana sta entro
+// COSTELLAZIONE_SPAZIO_PX, poi meno. Siccome la costellazione gira, conta la distanza dal centro in ogni direzione.
+float zoomGiustoCostellazione(int n) {
+  if (!COSTELLAZIONE_DISEGNATA) return 1.0f;
+  float lontana = 0;
+  for (int i = 0; i < n - 1 && i < COSTELLAZIONE_NUMERO_STELLE - 1; i++) {
+    float d = COSTELLAZIONE_SCALA_PX * sqrtf(COSTELLAZIONE_POSIZIONI[i][0] * COSTELLAZIONE_POSIZIONI[i][0]
+                                             + COSTELLAZIONE_POSIZIONI[i][1] * COSTELLAZIONE_POSIZIONI[i][1]);
+    if (d > lontana) lontana = d;
+  }
+  if (lontana <= COSTELLAZIONE_SPAZIO_PX) return 1.0f;
+  return COSTELLAZIONE_SPAZIO_PX / lontana;
+}
+
+// Ogni fotogramma (fuori dall'animazione): la scena va piano verso la grandezza giusta (per esempio se si cambiano le stelle dal menu).
+// All'accensione prende subito la grandezza giusta.
+void aggiornaZoomCostellazione(float dt) {
+  float bersaglio = zoomGiustoCostellazione(costellazioneStelle);
+  if (costellazioneZoom < 0) { costellazioneZoom = bersaglio; return; }
+  float k = COSTELLAZIONE_ZOOM_VELOCITA * dt;
+  if (k > 1.0f) k = 1.0f;
+  costellazioneZoom += (bersaglio - costellazioneZoom) * k;
+}
+
+// Rimpicciolisce anche la stella principale insieme alla scena (dopo tutti gli altri cambi di grandezza)
+void applicaZoomCostellazione() {
+  if (costellazioneZoom > 0) aspetto.raggio *= costellazioneZoom;
 }
