@@ -111,7 +111,7 @@ void aggiornaFesta(uint32_t ora) {
   if (bisogni.energia < FESTA_RIARMO_SOGLIA) festaPronta = true;
   bool arrivata = scossaRecente && energiaPrecedente < BISOGNO_MAX && bisogni.energia >= BISOGNO_MAX;
   energiaPrecedente = bisogni.energia;
-  if (arrivata && festaPronta && !festaAttiva) {
+  if (arrivata && festaPronta && !festaAttiva && !malataVisibile()) {   // da malata niente festa (logica_malata.ino)
     festaPronta = false;
     festaAttiva = true;
     festaInizioMs = ora;

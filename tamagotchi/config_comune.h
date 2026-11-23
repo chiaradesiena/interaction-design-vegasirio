@@ -434,3 +434,24 @@ const PezzoCane SIRIO_CANE_PEZZI[SIRIO_CANE_NUMERO_PEZZI] = {
 
 // Conversioni fisse (non vanno tarate)
 const float GRADI_A_RADIANTI = PI / 180.0;
+
+// Stato MALATA (in decadenza): sotto MALATA_SOGLIA_ENTRATA lo schermo diventa rosso e la stella nera lampeggia affannata;
+// si guarisce solo quando la salute torna a MALATA_SOGLIA_USCITA (in mezzo resta malata anche se migliora). I colori sono in colori.h.
+const float MALATA_SOGLIA_ENTRATA = 20;         // salute (0-100) sotto la quale si ammala (più alto = si ammala prima)
+const float MALATA_SOGLIA_USCITA = 60;          // salute (0-100) da raggiungere per guarire (più alto = guarire è più lungo)
+const uint32_t MALATA_ENTRATA_DURATA_MS = 2000; // durata della sfumatura dal nero al rosso quando si ammala, in ms (0 = cambio netto)
+// Guarigione: quando la salute torna a MALATA_SOGLIA_USCITA lo schermo va dal rosso al bianco, resta bianco, poi torna al cielo nero
+const uint32_t MALATA_USCITA_BIANCO_MS = 2500;  // durata della sfumatura dal rosso al bianco, in ms (più alto = più lenta)
+const uint32_t MALATA_USCITA_TENUTA_MS = 1000;  // quanto resta tutto bianco, in ms (0 = riparte subito verso il nero)
+const uint32_t MALATA_USCITA_NERO_MS = 3000;    // durata della sfumatura dal bianco al cielo nero, in ms; intanto la stella riprende il suo colore
+// Lampeggio affannoso: ogni acceso e ogni spento dura un tempo a caso fra il minimo e il massimo, così il ritmo è irregolare
+const uint32_t MALATA_ACCESO_MIN_MS = 80;       // acceso più breve, in ms (più basso = lampi più nervosi)
+const uint32_t MALATA_ACCESO_MAX_MS = 450;      // acceso più lungo, in ms (più alto = a tratti resta accesa più a lungo)
+const uint32_t MALATA_SPENTO_MIN_MS = 50;       // spento più breve, in ms
+const uint32_t MALATA_SPENTO_MAX_MS = 280;      // spento più lungo, in ms (più alto = buio più lungo fra un lampo e l'altro)
+const uint32_t MALATA_SEME = 777;               // cambia questo numero per avere un'altra sequenza di lampi
+// Mentre guarisce (salute da MALATA_SOGLIA_ENTRATA a MALATA_SOGLIA_USCITA) il lampeggio diventa piano piano regolare e lento,
+// fino a questi tempi quando è quasi guarita; intanto il rosso si attenua (i colori sono in colori.h)
+const uint32_t MALATA_CALMO_ACCESO_MS = 1100;   // acceso quando è quasi guarita, in ms (più alto = lampeggio più calmo)
+const uint32_t MALATA_CALMO_SPENTO_MS = 700;    // spento quando è quasi guarita, in ms
+const float MALATA_GUARIGIONE_VELOCITA = 1;     // quanto in fretta lampeggio e rosso seguono la salute (più alto = più rapido, 1 = circa 2 secondi)

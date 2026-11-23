@@ -60,7 +60,7 @@ void aggiornaCostellazione(uint32_t ora, float dt) {
   else costellazioneTenutaS = 0;
   bool completa = costellazioneStelle >= COSTELLAZIONE_NUMERO_STELLE;
   bool pausaFinita = secondiDallUltimaStella(ora) >= COSTELLAZIONE_PAUSA_S;
-  if (!completa && pausaFinita && !festaAttiva && costellazioneTenutaS >= COSTELLAZIONE_TENUTA_S) {
+  if (!completa && pausaFinita && !festaAttiva && !malataVisibile() && costellazioneTenutaS >= COSTELLAZIONE_TENUTA_S) {   // mentre guarisce niente stella nuova (logica_malata.ino)
     aggiungiStellaCostellazione(ora);
     costellazioneTenutaS = 0;
     iniziaAnimazioneCostellazione(ora);

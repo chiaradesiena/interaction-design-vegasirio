@@ -11,6 +11,7 @@
 bool stellaDisponibile(uint32_t ora) {
   if (unisonoFase == UNISONO_ATTESA) return true;
   if (unisonoFase == UNISONO_ANIMAZIONE) return false;
+  if (malata || malataSfumatura > 0) return false;   // da malata (o mentre sta ancora guarendo) niente Unisono (logica_malata.ino)
   if (bisogni.salute < UNISONO_SALUTE_MINIMA && !unisonoInvitata) return false;
   if (unisonoFineMs != 0 && ora - unisonoFineMs < (uint32_t)(UNISONO_PAUSA_DOPO_S * 1000)) return false;
   return schermataCorrente == HOME && !menuAperto && !festaAttiva;

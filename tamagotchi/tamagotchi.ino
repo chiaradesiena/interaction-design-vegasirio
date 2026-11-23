@@ -36,6 +36,7 @@ void setup() {
   Serial.begin(115200);
   Serial.printf("personaggio: %s\n", NOME_PERSONAGGIO);
   caricaStato();
+  caricaMalata();    // se era malata allo spegnimento, resta malata (logica_malata.ino)
   caricaStile();     // stella a puntini di sempre o puntini fitti, come l'ultima volta (logica_stile.ino)
 
   CoreS3.Display.setBrightness(LUMINOSITA_SCHERMO);
@@ -91,6 +92,8 @@ void loop() {
     Serial.printf("costellazione %d/%d   salute al 100%% da %.1f s   prossima stella fra %d min   orologio %d (%u s)\n",
                   costellazioneStelle, COSTELLAZIONE_NUMERO_STELLE, costellazioneTenutaS, minutiAllaProssimaStella(millis()),
                   sensi.orologioOk, (unsigned)sensi.orologioS);
+    Serial.printf("malata %d   guarigione %.2f   uscita %d   rosso %.2f   bianco %.2f   (si ammala sotto %.0f, guarisce da %.0f)\n",
+                  malata, malataGuarigione, malataInUscita, malataRosso, malataBianco, MALATA_SOGLIA_ENTRATA, MALATA_SOGLIA_USCITA);
     stampaRadio();
     Serial.printf("stato proprio %d   cane %d   forma %.2f   prossimo cane fra %d s\n",
                   statoProprio, caneAttivo, caneForma, (int)((int32_t)(prossimoCaneMs - millis()) / 1000));

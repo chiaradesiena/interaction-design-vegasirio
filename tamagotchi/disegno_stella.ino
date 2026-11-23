@@ -37,7 +37,7 @@ void disegnaStella(M5Canvas& c, int cx, int cy, const AspettoStella& a) {
       if (grigliaCane) { disegnaPuntinoCane(c, x, y, passo, densita, a.colore, a.cane >= 1); continue; }   // cane: puntini tutti uguali
       float rf = raggioMax * densita;
       if (rf < 0.25f) continue;                       // troppo piccolo: niente puntino
-      c.fillRect(x - passo / 2, y - passo / 2, passo, passo, NERO);   // copre il cielo dietro la stella
+      c.fillRect(x - passo / 2, y - passo / 2, passo, passo, coloreFondo);   // copre il cielo dietro la stella (col colore dello sfondo: nero, o rosso da malata)
       c.fillCircle(x, y, (int)(rf + 0.5f), a.colore); // raggio 0 = un solo pixel
     }
   }
