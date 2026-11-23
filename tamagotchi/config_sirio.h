@@ -12,6 +12,8 @@ const TipoCrescita CRESCITA_TIPO = CRESCITA_TRATTI;     // carezza: cresce a tra
 const TipoOrbita   ORBITA_TIPO   = ORBITA_OTTO;         // movimento: disegna un 8 (ORBITA_CASUALE = come Vega)
 const TipoFesta    FESTA_TIPO    = FESTA_SALTI_BORDO;   // energia al 100%: salti lungo il bordo (FESTA_RIMBALZI = come Vega)
 const TipoStatoProprio STATO_PROPRIO_TIPO = PROPRIO_NESSUNO;   // salute alta: nessuna animazione propria (PROPRIO_CANE = ogni tanto diventa un cane)
+const TipoMusica   MUSICA_TIPO   = MUSICA_BRANO;        // Unisono: suona il brano di brano.h (MUSICA_RITMO = il vecchio ritmo qui sotto)
+const ParteBrano   BRANO_PARTE   = PARTE_BASSA;         // nel brano Sirio fa le note basse (PARTE_ALTA = come Vega)
 
 // Cielo
 const float MOTION_BLUR                = 0.5;   // lunghezza della scia (0 = niente scia, 2 = scia doppia)
@@ -96,3 +98,4 @@ const int   ORCHESTRA_NUMERO_NOTE = 3;          // quante note ha l'elenco qui s
 const float ORCHESTRA_NOTE_HZ[ORCHESTRA_NUMERO_NOTE] =   // altezza delle note in Hz (Sirio: la, mi, sol gravi)
   { 220.00, 164.81, 196.00 };
 const uint16_t ORCHESTRA_DURATA_MS = 900;       // durata di ogni nota, in ms (più alto = note più lunghe e legate)
+const uint8_t BRANO_VOLUME = 255;               // volume di Sirio nel brano (0-255): i bassi stanno sotto la melodia di Vega (più alto = bassi più presenti)

@@ -193,13 +193,18 @@ float luceMia = 0;                        // 1 = la propria stella ha appena suo
 int32_t differenzaDirettoreMs = 0;        // quanto l'orologio del direttore è avanti rispetto al nostro (0 = siamo noi il direttore)
 bool sonoDirettore = true;                // vero = è questa stella a dare il tempo
 
+// Brano di Unisono
+int branoProssimaMia = 0;                 // la prossima nota della propria parte da suonare
+int branoProssimaAltra = 0;               // la prossima nota dell'altra parte (non si suona: serve a illuminare l'altra stella)
+uint32_t branoFineVoceMs[BRANO_VOCI] = { 0 };   // quando finisce la nota di ogni voce (per scegliere una voce libera)
+
 // Unisono
 FaseUnisono unisonoFase = UNISONO_NO;     // a che punto è Unisono
 uint32_t unisonoInizioMs = 0;             // quando è iniziata l'attesa
 uint32_t unisonoAnimazioneMs = 0;         // quando è iniziata l'animazione della galassia
 uint32_t unisonoFineMs = 0;               // quando è finito l'ultimo Unisono (0 = mai, niente pausa)
 bool unisonoInvitata = false;             // per il futuro stato ESPLOSIONE: vero = la stella può entrare in Unisono anche senza salute
-StellaGalassia galassia[UNISONO_MAX_STELLE + UNISONO_MAX_FINTE];   // le altre stelle della galassia
+StellaGalassia galassia[UNISONO_MAX_STELLE];   // le altre stelle della galassia
 int numeroGalassia = 0;                   // quante ce ne sono
 float unisonoAngolo = 0;                  // radianti, a che punto del giro è la galassia
 float luceAngolo = 0;                     // radianti, dove punta il braccio di luce
@@ -208,8 +213,8 @@ float luceVisibile = 0;                   // 0 = braccio di luce spento, 1 = acc
 // Quello che si disegna (lo calcola la logica, lo usa il disegno)
 AspettoStella aspettoUnisono;             // la stella di questo dispositivo, al centro
 int unisonoCentroX = 0, unisonoCentroY = 0;   // dove sta, in px
-AspettoStella aspettiGalassia[UNISONO_MAX_STELLE + UNISONO_MAX_FINTE];   // le altre stelle
-int galassiaX[UNISONO_MAX_STELLE + UNISONO_MAX_FINTE], galassiaY[UNISONO_MAX_STELLE + UNISONO_MAX_FINTE];   // dove stanno, in px
+AspettoStella aspettiGalassia[UNISONO_MAX_STELLE];   // le altre stelle
+int galassiaX[UNISONO_MAX_STELLE], galassiaY[UNISONO_MAX_STELLE];   // dove stanno, in px
 
 // Tempo e disegno
 uint32_t ultimoAggiornamento = 0;

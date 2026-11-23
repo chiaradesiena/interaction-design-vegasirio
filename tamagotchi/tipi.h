@@ -91,6 +91,7 @@ struct __attribute__((packed)) MessaggioUnisono {
   uint32_t contatore;    // quanti messaggi ha mandato (serve a riconoscere un riavvio)
   uint32_t accesaDaMs;   // da quanti ms è accesa: il suo orologio, per andare a tempo col "direttore"
   char ritmo[32];        // il suo ritmo di 0 e 1 (lungo ORCHESTRA_PASSI = 32), così le altre la illuminano a tempo
+  uint32_t attesaDaMs;   // quando (sul suo orologio) è iniziata la sua attesa di Unisono (0 = non è in Unisono): serve a partire insieme
 };
 
 // Una stella vicina sentita dalla radio
@@ -107,12 +108,12 @@ struct StellaVicina {
   uint32_t confermataMs; // quando ha raggiunto UNISONO_CONFERME (0 = non ancora)
   int32_t differenzaMs;  // quanto il suo orologio è avanti rispetto al nostro, in ms
   char ritmo[32];        // il suo ritmo di 0 e 1
+  uint32_t attesaDaMs;   // quando (sul suo orologio) è iniziata la sua attesa di Unisono (0 = non è in Unisono)
 };
 
-// Una stella della galassia di Unisono (vera, sentita dalla radio, oppure finta per le prove)
+// Una stella della galassia di Unisono (sentita dalla radio)
 struct StellaGalassia {
-  uint8_t mac[6];        // indirizzo della sua radio (le finte hanno tutti zeri)
-  bool finta;
+  uint8_t mac[6];        // indirizzo della sua radio
   char nome[10];
   uint16_t colore;
   uint8_t punte;
@@ -120,8 +121,6 @@ struct StellaGalassia {
   uint32_t arrivoMs;     // quando si è aggiunta alla galassia
   float posto;           // dove sta adesso lungo il suo braccio (0 = inizio, 1 = la stella più lontana); si sposta piano quando ne arriva un'altra
   float luce;            // 1 = appena illuminata (suona, o ci passa il braccio di luce), 0 = normale
-  int indiceFinta;       // per le finte: quale delle UNISONO_FINTE_* (-1 = stella vera)
-  int notaCorrente;      // per le finte: quale delle sue note suona la prossima volta
   char ritmo[32];        // il suo ritmo di 0 e 1
 };
 
@@ -139,6 +138,16 @@ enum TipoCrescita { CRESCITA_TRATTI, CRESCITA_CONTINUA };    // carezza: cresce 
 enum TipoOrbita   { ORBITA_OTTO, ORBITA_CASUALE };           // movimento: disegna un 8 / orbite casuali con profondità
 enum TipoFesta    { FESTA_SALTI_BORDO, FESTA_RIMBALZI };     // energia al 100%: salti lungo il bordo / rimbalzi fra alto e basso
 enum TipoStatoProprio { PROPRIO_NESSUNO, PROPRIO_CANE };     // salute alta: nessuna animazione propria / diventa un cane (Sirio)
+enum TipoMusica   { MUSICA_RITMO, MUSICA_BRANO };            // Unisono: il vecchio ritmo di 0 e 1 / il brano scritto in brano.h
+enum ParteBrano   { PARTE_ALTA, PARTE_BASSA };               // quale parte del brano suona la stella: le note alte (Vega) / le note basse (Sirio)
+
+// Una nota del brano di Unisono (le tabelle sono in brano.h)
+struct NotaBrano {
+  uint32_t inizioMs;     // quando parte, in ms dall'inizio del brano
+  uint16_t durataMs;     // quanto dura, in ms
+  uint16_t hz;           // altezza, in Hz
+  uint8_t forza;         // quanto è forte nell'originale (0-100)
+};
 
 // Come si disegna la stella: a puntini (quella di sempre), a puntini fitti (più puntini, più piccoli) o a raggi di puntini. Si cambia con uno swipe verticale.
 enum StileStella { STILE_PUNTINI, STILE_FITTO, STILE_RAGGI, STILI_NUMERO };   // STILI_NUMERO = quante versioni ci sono (va sempre per ultimo)

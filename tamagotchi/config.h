@@ -16,3 +16,5 @@
 #else
   #error "In personaggio.h non e' attiva nessuna stella: togli // davanti a una riga #define"
 #endif
+
+#include "brano.h"   // lo spartito della musica di Unisono (le due parti, per tutte e due le stelle)
