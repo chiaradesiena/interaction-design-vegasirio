@@ -12,6 +12,8 @@ const TipoCrescita CRESCITA_TIPO = CRESCITA_CONTINUA;   // carezza: cresce di co
 const TipoOrbita   ORBITA_TIPO   = ORBITA_CASUALE;      // movimento: orbite casuali con profondità (ORBITA_OTTO = come Sirio)
 const TipoFesta    FESTA_TIPO    = FESTA_RIMBALZI;      // energia al 100%: rimbalzi fra alto e basso (FESTA_SALTI_BORDO = come Sirio)
 const TipoStatoProprio STATO_PROPRIO_TIPO = PROPRIO_NESSUNO;   // salute alta: per ora nessuna animazione propria (PROPRIO_CANE = come Sirio)
+const TipoMusica   MUSICA_TIPO   = MUSICA_BRANO;        // Unisono: suona il brano di brano.h (MUSICA_RITMO = il vecchio ritmo qui sotto)
+const ParteBrano   BRANO_PARTE   = PARTE_ALTA;          // nel brano Vega fa le note alte (PARTE_BASSA = come Sirio)
 
 // Cielo
 const float MOTION_BLUR                = 0.2;   // lunghezza della scia (0 = niente scia, 2 = scia doppia)
@@ -85,9 +87,9 @@ const float COSTELLAZIONE_GRANDEZZE[COSTELLAZIONE_NUMERO_STELLE - 1] =
 // Voce di Vega nell'orchestra di Unisono: acuta e veloce, ritmo fitto (tante note brevi).
 // Il ritmo ha ORCHESTRA_PASSI = 32 caselle, scritte a gruppi di 8 (un gruppo = un tempo): 1 = suona, 0 = silenzio.
 // Una battuta intera (32 caselle) è un giro del braccio di luce. A ogni 1 suona la nota successiva dell'elenco.
-// (Una copia di questa voce è anche fra le stelle finte, in config_comune.h: se la cambi qui, cambiala anche lì.)
 const char* const ORCHESTRA_RITMO = "10110101" "10101101" "10110101" "11011011";
 const int   ORCHESTRA_NUMERO_NOTE = 8;          // quante note ha l'elenco qui sotto
 const float ORCHESTRA_NOTE_HZ[ORCHESTRA_NUMERO_NOTE] =   // altezza delle note in Hz (Vega: la, do, mi, re, sol acuti)
   { 880.00, 1046.50, 1318.51, 1174.66, 1567.98, 1318.51, 1174.66, 1046.50 };
 const uint16_t ORCHESTRA_DURATA_MS = 70;        // durata di ogni nota, in ms (più basso = note più secche)
+const uint8_t BRANO_VOLUME = 255;               // volume di Vega nel brano (0-255): è la melodia, quindi più forte di Sirio

@@ -1,7 +1,7 @@
 // =====================================================================
 //  LOGICA ORCHESTRA — la musica di Unisono. Tutte le stelle seguono l'orologio del "direttore"
 //  (la stella con l'indirizzo radio più basso), così i ritmi di 0 e 1 vanno a tempo su ogni dispositivo.
-//  Ogni dispositivo suona solo la propria voce (più le finte, per le prove) e illumina ogni stella quando suona.
+//  Ogni dispositivo suona solo la propria voce e illumina ogni stella quando suona.
 //  Legge galassia e stelleVicine; usa suona(); scrive luceMia, galassia[i].luce e orchestra*.
 // =====================================================================
 
@@ -23,7 +23,7 @@ bool ritmoSuona(const char* ritmo, int passo) {
 void scegliDirettore() {
   const uint8_t* direttore = mioMac;
   for (int i = 0; i < numeroGalassia; i++)
-    if (!galassia[i].finta && memcmp(galassia[i].mac, direttore, 6) < 0) direttore = galassia[i].mac;
+    if (memcmp(galassia[i].mac, direttore, 6) < 0) direttore = galassia[i].mac;
   sonoDirettore = direttore == mioMac;
   if (sonoDirettore) { differenzaDirettoreMs = 0; return; }
   portENTER_CRITICAL(&lucchettoVicine);
@@ -43,8 +43,8 @@ float angoloLuceComune() {
   return 2 * PI * (tempoComune() % battutaMs) / (float)battutaMs - PI / 2;
 }
 
-// Suona una casella del ritmo: ogni voce ha il suo canale dell'altoparlante (la propria il canale
-// ORCHESTRA_CANALE_MIO, ogni finta quello dopo), così le note si sentono insieme. Ogni stella con un 1 si illumina.
+// Suona una casella del ritmo sul canale ORCHESTRA_CANALE_MIO. Ogni stella della galassia con un 1 si illumina
+// (le altre stelle suonano sul loro dispositivo).
 void suonaPasso(int passo, uint32_t ora) {
   if (ritmoSuona(ORCHESTRA_RITMO, passo)) {
     suonaSuCanale(ORCHESTRA_NOTE_HZ[orchestraNotaMia], ORCHESTRA_DURATA_MS, ORCHESTRA_CANALE_MIO);
@@ -55,22 +55,18 @@ void suonaPasso(int passo, uint32_t ora) {
     StellaGalassia& s = galassia[i];
     if (!ritmoSuona(s.ritmo, passo)) continue;
     illuminaStellaGalassia(i);
-    if (s.indiceFinta < 0) continue;                                     // le stelle vere suonano sul loro dispositivo
-    int f = s.indiceFinta;
-    if (UNISONO_FINTE_SUONANO) suonaSuCanale(UNISONO_FINTE_NOTE_HZ[f][s.notaCorrente], UNISONO_FINTE_DURATA_MS[f], ORCHESTRA_CANALE_MIO + 1 + f);
-    s.notaCorrente = (s.notaCorrente + 1) % UNISONO_FINTE_NUMERO_NOTE[f];
   }
 }
 
-// Volumi dei canali: all'inizio di Unisono la propria voce e le finte; alla fine tutti di nuovo pieni,
+// Volumi dei canali: all'inizio di Unisono la propria voce; alla fine tutti di nuovo pieni,
 // così gli altri suoni della stella (che scelgono il canale da soli) restano come prima
 void impostaVolumiOrchestra() {
   impostaVolumeCanale(ORCHESTRA_CANALE_MIO, ORCHESTRA_VOLUME_MIO);
-  for (int f = 0; f < UNISONO_MAX_FINTE; f++) impostaVolumeCanale(ORCHESTRA_CANALE_MIO + 1 + f, ORCHESTRA_VOLUME_FINTE);
 }
 
 void ripristinaVolumiOrchestra() {
-  for (int f = 0; f <= UNISONO_MAX_FINTE; f++) impostaVolumeCanale(ORCHESTRA_CANALE_MIO + f, 255);
+  impostaVolumeCanale(ORCHESTRA_CANALE_MIO, 255);
+  ripristinaVolumiBrano();
 }
 
 // Ogni fotogramma durante Unisono: durante la galassia (tranne l'ultimo secondo) suona la casella del ritmo
@@ -80,6 +76,7 @@ void aggiornaOrchestra(uint32_t ora) {
   scegliDirettore();
   bool attiva = unisonoFase == UNISONO_ANIMAZIONE
                 && ora - unisonoAnimazioneMs < (uint32_t)((UNISONO_DURATA_S - ORCHESTRA_FINE_PRIMA_S) * 1000);
+  if (MUSICA_TIPO == MUSICA_BRANO) { aggiornaBrano(ora, attiva); return; }   // al posto del ritmo, il brano (logica_brano.ino)
   if (!attiva) { orchestraUltimoPasso = -1; return; }
   int passo = (int)((tempoComune() / ORCHESTRA_PASSO_MS) % ORCHESTRA_PASSI);
   if (passo == orchestraUltimoPasso) return;
@@ -95,4 +92,5 @@ void azzeraOrchestra() {
   differenzaDirettoreMs = 0;
   sonoDirettore = true;
   impostaVolumiOrchestra();
+  azzeraBrano();
 }

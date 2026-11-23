@@ -1,5 +1,5 @@
 // =====================================================================
-//  LOGICA UNISONO — quando la radio trova una stella vicina (o arriva una stella finta di prova):
+//  LOGICA UNISONO — quando la radio trova una stella vicina:
 //  attesa di UNISONO_ATTESA_S per altre stelle, poi la galassia per UNISONO_DURATA_S,
 //  poi socialità al 100% e pausa di UNISONO_PAUSA_DOPO_S. Legge stelleVicine e bisogni;
 //  scrive galassia, aspettoUnisono, aspettiGalassia e le posizioni. Non disegna.
@@ -16,11 +16,6 @@ bool stellaDisponibile(uint32_t ora) {
   return schermataCorrente == HOME && !menuAperto && !festaAttiva;
 }
 
-// Le stelle finte di prova sono "vicine" dopo UNISONO_FINTE_PRIMA_S secondi dall'accensione
-bool finteVicine(uint32_t ora) {
-  return UNISONO_STELLE_FINTE > 0 && ora >= (uint32_t)(UNISONO_FINTE_PRIMA_S * 1000);
-}
-
 // C'è almeno una stella vera vicina (confermata) e disponibile?
 bool stellaVeraPronta() {
   bool pronta = false;
@@ -34,7 +29,7 @@ bool stellaVeraPronta() {
 // Ogni fotogramma nella schermata normale: se la stella è disponibile e ne trova un'altra, parte l'attesa
 void controllaIncontroUnisono(uint32_t ora) {
   if (unisonoFase != UNISONO_NO || !stellaDisponibile(ora)) return;
-  if (stellaVeraPronta() || finteVicine(ora)) iniziaAttesaUnisono(ora);
+  if (stellaVeraPronta()) iniziaAttesaUnisono(ora);
 }
 
 void iniziaAttesaUnisono(uint32_t ora) {
@@ -47,13 +42,11 @@ void iniziaAttesaUnisono(uint32_t ora) {
 }
 
 // Aggiunge alla galassia una stella (se c'è ancora posto); parte dal punto del cerchio dove poi starà
-void aggiungiStellaGalassia(const uint8_t* mac, int indiceFinta, const char* nome, uint16_t colore, uint8_t punte,
+void aggiungiStellaGalassia(const uint8_t* mac, const char* nome, uint16_t colore, uint8_t punte,
                             float vita, float affilatura, const char* ritmo, uint32_t ora) {
-  bool finta = indiceFinta >= 0;
-  if (numeroGalassia >= UNISONO_MAX_STELLE + UNISONO_MAX_FINTE) return;
+  if (numeroGalassia >= UNISONO_MAX_STELLE) return;
   StellaGalassia& s = galassia[numeroGalassia];
   memcpy(s.mac, mac, 6);
-  s.finta = finta;
   strncpy(s.nome, nome, sizeof(s.nome) - 1);
   s.nome[sizeof(s.nome) - 1] = 0;
   s.colore = colore;
@@ -63,8 +56,6 @@ void aggiungiStellaGalassia(const uint8_t* mac, int indiceFinta, const char* nom
   s.arrivoMs = ora;
   s.posto = 1;                                   // arriva in fondo al braccio
   s.luce = 0;
-  s.indiceFinta = indiceFinta;
-  s.notaCorrente = 0;
   copiaRitmo(s.ritmo, ritmo);
   numeroGalassia++;
   Serial.printf("unisono: si aggiunge %s (%d stelle)\n", s.nome, numeroGalassia + 1);
@@ -82,25 +73,8 @@ void aggiungiStelleVere(uint32_t ora) {
     if (!stellaVicinaConfermata(v) || !v.disponibile) continue;
     bool giaDentro = false;
     for (int j = 0; j < numeroGalassia; j++)
-      if (!galassia[j].finta && memcmp(galassia[j].mac, v.mac, 6) == 0) giaDentro = true;
-    if (!giaDentro) aggiungiStellaGalassia(v.mac, -1, v.nome, v.colore, v.punte, v.vita, v.affilatura, v.ritmo, ora);
-  }
-}
-
-// Durante l'attesa: le stelle finte arrivano una alla volta, a UNISONO_FINTE_INTERVALLO_S secondi l'una dall'altra
-void aggiungiStelleFinte(uint32_t ora) {
-  if (!finteVicine(ora)) return;
-  int finte = 0;
-  for (int j = 0; j < numeroGalassia; j++) if (galassia[j].finta) finte++;
-  int attese = 1 + (int)((ora - unisonoInizioMs) / (UNISONO_FINTE_INTERVALLO_S * 1000));
-  int massimo = min(UNISONO_STELLE_FINTE, UNISONO_MAX_FINTE);
-  if (attese > massimo) attese = massimo;
-  const uint8_t nessunMac[6] = { 0, 0, 0, 0, 0, 0 };
-  while (finte < attese) {
-    const uint8_t* c = UNISONO_FINTE_COLORI[finte];
-    aggiungiStellaGalassia(nessunMac, finte, UNISONO_FINTE_NOMI[finte], rgb(c[0], c[1], c[2]), UNISONO_FINTE_PUNTE[finte],
-                           UNISONO_FINTE_VITA[finte], UNISONO_FINTE_AFFILATURA[finte], UNISONO_FINTE_RITMO[finte], ora);
-    finte++;
+      if (memcmp(galassia[j].mac, v.mac, 6) == 0) giaDentro = true;
+    if (!giaDentro) aggiungiStellaGalassia(v.mac, v.nome, v.colore, v.punte, v.vita, v.affilatura, v.ritmo, ora);
   }
 }
 
@@ -115,6 +89,28 @@ void fineUnisono(uint32_t ora) {
   Serial.println("unisono: finito, socialita al 100%");
 }
 
+// Quando parte la galassia: UNISONO_ATTESA_S dopo l'attesa iniziata per ultima fra questa stella e le stelle vere
+// della galassia (il loro orologio riportato sul nostro). Così tutti scelgono lo stesso istante e partono insieme, musica compresa.
+// Conta solo chi ha iniziato l'attesa dopo di noi, al massimo UNISONO_ATTESA_S dopo (un dato vecchio non fa aspettare).
+uint32_t inizioGalassiaComune() {
+  uint32_t finestra = (uint32_t)(UNISONO_ATTESA_S * 1000);
+  uint32_t ultima = unisonoInizioMs;
+  portENTER_CRITICAL(&lucchettoVicine);
+  for (int i = 0; i < numeroStelleVicine; i++) {
+    const StellaVicina& v = stelleVicine[i];
+    if (v.attesaDaMs == 0) continue;                                  // non è in Unisono
+    bool nellaGalassia = false;
+    for (int j = 0; j < numeroGalassia; j++)
+      if (memcmp(galassia[j].mac, v.mac, 6) == 0) nellaGalassia = true;
+    if (!nellaGalassia) continue;
+    uint32_t suaAttesa = v.attesaDaMs - (uint32_t)v.differenzaMs;     // la sua attesa sul nostro orologio
+    int32_t dopo = (int32_t)(suaAttesa - unisonoInizioMs);
+    if (dopo > 0 && dopo <= (int32_t)finestra && (int32_t)(suaAttesa - ultima) > 0) ultima = suaAttesa;
+  }
+  portEXIT_CRITICAL(&lucchettoVicine);
+  return ultima + finestra;
+}
+
 // Ogni fotogramma durante Unisono (al posto del solito aggiornaStato): cielo, colore, aspetto e galassia;
 // i bisogni restano fermi e tocchi, voce e scosse non contano
 void aggiornaUnisono(uint32_t ora, float dt) {
@@ -125,11 +121,11 @@ void aggiornaUnisono(uint32_t ora, float dt) {
   unisonoAngolo = fmodf(unisonoAngolo + 2 * PI * dt / UNISONO_GIRO_S, 2 * PI);
   if (unisonoFase == UNISONO_ATTESA) {
     aggiungiStelleVere(ora);
-    aggiungiStelleFinte(ora);
-    if (ora - unisonoInizioMs >= (uint32_t)(UNISONO_ATTESA_S * 1000)) {
+    uint32_t partenza = inizioGalassiaComune();                     // uguale su tutti i dispositivi: galassia e brano partono insieme
+    if ((int32_t)(ora - partenza) >= 0) {
       unisonoFase = UNISONO_ANIMAZIONE;
-      unisonoAnimazioneMs = ora;
-      Serial.printf("unisono: galassia di %d stelle\n", numeroGalassia + 1);
+      unisonoAnimazioneMs = partenza;
+      Serial.printf("unisono: galassia di %d stelle (attesa di %d ms)\n", numeroGalassia + 1, (int)(partenza - unisonoInizioMs));
     }
   } else if (unisonoFase == UNISONO_ANIMAZIONE && ora - unisonoAnimazioneMs >= (uint32_t)(UNISONO_DURATA_S * 1000)) {
     fineUnisono(ora);

@@ -51,6 +51,7 @@ void riceviMessaggioUnisono(const esp_now_recv_info_t* info, const uint8_t* dati
     v.disponibile = m.disponibile != 0;
     v.differenzaMs = (int32_t)(m.accesaDaMs - ora);   // il messaggio ci mette pochi ms ad arrivare: basta per andare a tempo
     memcpy(v.ritmo, m.ritmo, sizeof(v.ritmo));
+    v.attesaDaMs = m.attesaDaMs;
     v.rssi = info->rx_ctrl->rssi;
     v.ultimoMs = ora;
     if (v.rssi >= UNISONO_RSSI_SOGLIA) {           // segnale forte: una conferma in più
@@ -109,6 +110,7 @@ void inviaRichiestaUnisono(uint32_t ora) {
   m.contatore = messaggiInviati;
   m.accesaDaMs = ora;
   copiaRitmo(m.ritmo, ORCHESTRA_RITMO);
+  if (unisonoFase != UNISONO_NO) m.attesaDaMs = unisonoInizioMs == 0 ? 1 : unisonoInizioMs;   // 0 vorrebbe dire "non in Unisono"
   if (esp_now_send(INDIRIZZO_TUTTI, (const uint8_t*)&m, sizeof(m)) == ESP_OK) {
     messaggiInviati++;
     Serial.printf("radio: richiesta di unisono inviata (%u)\n", (unsigned)messaggiInviati);
@@ -149,6 +151,6 @@ void stampaStelleSentite() {
                   stellaVicinaConfermata(v) ? "VICINA" : "lontana", v.disponibile ? "" : " (non in salute)");
   }
   Serial.println();
-  Serial.printf("unisono: fase %s   stelle nella galassia %d   pausa ancora %d s   disponibile %d   finte %d\n",
-                nomeFaseUnisono(), numeroGalassia + 1, secondiPausaUnisono(ora), stellaDisponibile(ora), UNISONO_STELLE_FINTE);
+  Serial.printf("unisono: fase %s   stelle nella galassia %d   pausa ancora %d s   disponibile %d\n",
+                nomeFaseUnisono(), numeroGalassia + 1, secondiPausaUnisono(ora), stellaDisponibile(ora));
 }
