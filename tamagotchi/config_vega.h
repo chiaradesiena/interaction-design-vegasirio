@@ -11,7 +11,7 @@ const TipoAscolto  ASCOLTO_TIPO  = ASCOLTO_RAGGI;       // voce: i raggi si allu
 const TipoCrescita CRESCITA_TIPO = CRESCITA_CONTINUA;   // carezza: cresce di continuo (CRESCITA_TRATTI = come Sirio)
 const TipoOrbita   ORBITA_TIPO   = ORBITA_CASUALE;      // movimento: orbite casuali con profondità (ORBITA_OTTO = come Sirio)
 const TipoFesta    FESTA_TIPO    = FESTA_RIMBALZI;      // energia al 100%: rimbalzi fra alto e basso (FESTA_SALTI_BORDO = come Sirio)
-const TipoStatoProprio STATO_PROPRIO_TIPO = PROPRIO_NESSUNO;   // salute alta: per ora nessuna animazione propria (PROPRIO_CANE = come Sirio)
+const TipoStatoProprio STATO_PROPRIO_TIPO = PROPRIO_PAPARAZZI;   // salute alta: ogni tanto arrivano i paparazzi (PROPRIO_CANE = come Sirio, PROPRIO_NESSUNO = niente)
 
 // Cielo
 const float MOTION_BLUR                = 0.2;   // lunghezza della scia (0 = niente scia, 2 = scia doppia)

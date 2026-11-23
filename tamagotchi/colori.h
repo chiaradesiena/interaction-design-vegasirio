@@ -20,3 +20,4 @@ const uint16_t COLORE_VALORI = rgb(200, 200, 200);   // scritta dei valori in al
 const uint16_t GRIGIO_LIVELLO_SPENTO = rgb(70, 70, 70);   // puntini dei livelli del menu oltre il valore scelto
 const uint16_t GRIGIO_MENU =rgb(45, 45, 45);        // puntini di fondo del menu
 const uint16_t GRIGIO_BORDO_MENU = rgb(110, 110, 110);   // linea sottile del bordo del menu mentre entra o esce
+const uint16_t VEGA_PAPARAZZI_ROSA = rgb(255, 153, 200); // fondo rosa dello stato proprio di Vega (#FF99C8)
