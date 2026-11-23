@@ -139,3 +139,15 @@ enum TipoCrescita { CRESCITA_TRATTI, CRESCITA_CONTINUA };    // carezza: cresce 
 enum TipoOrbita   { ORBITA_OTTO, ORBITA_CASUALE };           // movimento: disegna un 8 / orbite casuali con profondità
 enum TipoFesta    { FESTA_SALTI_BORDO, FESTA_RIMBALZI };     // energia al 100%: salti lungo il bordo / rimbalzi fra alto e basso
 enum TipoStatoProprio { PROPRIO_NESSUNO, PROPRIO_CANE };     // salute alta: nessuna animazione propria / diventa un cane (Sirio)
+
+// Come si disegna la stella: a puntini (quella di sempre), a puntini fitti (più puntini, più piccoli) o a raggi di puntini. Si cambia con uno swipe verticale.
+enum StileStella { STILE_PUNTINI, STILE_FITTO, STILE_RAGGI, STILI_NUMERO };   // STILI_NUMERO = quante versioni ci sono (va sempre per ultimo)
+
+// Il carattere della versione a raggi di una stella (i numeri sono in config_comune.h: RAGGI_SIRIO, RAGGI_VEGA)
+struct CarattereRaggi {
+  int   numero;          // quanti raggi
+  float addensamento;    // quanto si raccolgono verso le punte (0 = tutti alla stessa distanza)
+  float giroGradiS;      // gradi al secondo intorno al nucleo (positivo = antiorario, negativo = orario)
+  float lunghezza;       // lunghezza rispetto al raggio della stella
+  float nucleo;          // grandezza del nucleo rispetto al centro della stella a puntini
+};

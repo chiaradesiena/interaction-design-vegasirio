@@ -13,6 +13,7 @@ void iniziaAnimazioneCostellazione(uint32_t ora) {
   schermataCorrente = ANIMAZIONE_COSTELLAZIONE;
   animCentroX = LARGHEZZA / 2 + (int)(dragX.valore + aspetto.spostamentoX);
   animCentroY = ALTEZZA / 2 + (int)(dragY.valore + aspetto.spostamentoY);
+  animZoomInizio = costellazioneZoom > 0 ? costellazioneZoom : zoomGiustoCostellazione(costellazioneStelle - 1);   // grandezza della scena prima della stella nuova
   Serial.println("costellazione: animazione");
 }
 
@@ -58,6 +59,10 @@ void aggiornaAnimazioneCostellazione(uint32_t ora, float dt) {
   bool accesa = !ritorno || ((ora - animInizioMs) / ANIM_COST_LAMPEGGIO_STELLA_MS) % 2 == 0;
   aspetto.luminosita = accesa ? 1.0f : 0.0f;
   applicaCostellazione();
+  // la scena rimpicciolisce per far posto alla stella nuova mentre tutto scompare (prima del bianco), poi resta ferma
+  float zoomGiusto = zoomGiustoCostellazione(costellazioneStelle);
+  costellazioneZoom = animZoomInizio + (zoomGiusto - animZoomInizio) * frazioneDolce(t, 0.0f, ANIM_COST_FINE_BIANCO_S);
+  applicaZoomCostellazione();
 }
 
 // Fine dei 10 secondi: si torna alla schermata normale, con tutto visibile

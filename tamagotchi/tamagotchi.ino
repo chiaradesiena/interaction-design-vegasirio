@@ -36,6 +36,7 @@ void setup() {
   Serial.begin(115200);
   Serial.printf("personaggio: %s\n", NOME_PERSONAGGIO);
   caricaStato();
+  caricaStile();     // stella a puntini di sempre o puntini fitti, come l'ultima volta (logica_stile.ino)
 
   CoreS3.Display.setBrightness(LUMINOSITA_SCHERMO);
   CoreS3.Speaker.setVolume(volumeCorrente);   // livello di partenza: VOLUME_LIVELLO_INIZIALE

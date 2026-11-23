@@ -54,6 +54,30 @@ const float PULSAZIONE_AMPIEZZA   = 0.10;       // la stella cresce e cala del 6
 const uint32_t PULSAZIONE_PERIODO_MS = 3500;    // durata di un respiro di luce completo
 const float STELLA_ROTAZIONE_GRADI_S = 0.5;       // rotazione lenta della stella su sé stessa (0 = ferma)
 
+// Versioni della stella, si cambiano con lo swipe: puntini di sempre -> puntini fitti (solo con STILE_FITTO_ATTIVO) -> raggi di puntini.
+// Swipe verso l'alto = versione successiva, verso il basso = precedente.
+// Puntini fitti: la stessa stella halftone, ma con più puntini e più piccoli.
+const int   STILE_SWIPE_MIN_PX = 60;            // px che il dito deve percorrere in verticale perché lo swipe conti (più alto = serve uno swipe più lungo)
+const float STILE_SWIPE_VERTICALE = 1.5;        // lo swipe deve essere tante volte più verticale che orizzontale (più alto = deve essere più dritto)
+const int   FITTO_PASSO_GRIGLIA = 4;            // px fra un puntino e l'altro nella versione fitta (il puntino più grande è largo quanto il passo: più basso = più puntini e più piccoli; quella di sempre usa STELLA_PASSO_GRIGLIA = 8)
+
+// Stella a raggi di puntini (la terza versione, disegno_raggi.ino): nucleo di puntini e raggi fatti di colonne di puntini.
+// Il carattere dei raggi di ogni stella (numero, addensamento, giro, lunghezza, nucleo) è qui sotto in RAGGI_SIRIO e RAGGI_VEGA:
+// servono tutti e due perché in Unisono si disegna anche l'altra stella coi suoi raggi (la si riconosce dal nome).
+// In ordine: numero di raggi (massimo 128) | quanto si raccolgono verso le punte (0 = tutti alla stessa distanza; 1 = moltissimo)
+//   | giro in gradi al secondo (positivo = antiorario, negativo = orario, 0 = fermi) | lunghezza rispetto al raggio della stella (più alto = più lunghi)
+//   | nucleo rispetto al centro della stella a puntini (più alto = più grande)
+const CarattereRaggi RAGGI_SIRIO = { 21, 0.55,   4, 0.70, 1.2 };   // Sirio: pochi raggi corti, raccolti verso le 4 punte, girano piano in senso antiorario, nucleo grande
+const CarattereRaggi RAGGI_VEGA  = { 96, 0.3,  -12, 1.0,  1.0 };   // Vega: tanti raggi, cerchio pieno, girano veloci in senso orario
+const int   RAGGI_PASSO_PX = 4;                 // px fra un puntino e l'altro lungo il raggio e fra le colonne (più basso = puntini più fitti)
+const int   RAGGI_PUNTINO_PX = 1;               // raggio di ogni puntino in px (1 = puntino largo 3 px; 0 = un pixel)
+const int   RAGGI_COLONNE_MAX = 3;              // un raggio può avere da 1 a tante colonne di puntini affiancate (1 = tutti sottili)
+const float RAGGI_VARIAZIONE = 0.2;             // quanto i raggi hanno lunghezze diverse (0 = tutti uguali, 0.5 = alcuni lunghi la metà)
+const float RAGGI_RESPIRO_AMPIEZZA = 0.08;      // quanto i raggi si allungano e si accorciano (0 = fermi)
+const uint32_t RAGGI_RESPIRO_PERIODO_MS = 3000; // durata media di un respiro dei raggi, in ms (più alto = più lento)
+const float RAGGI_VUOTI = 0.12;                 // parte dei puntini dei raggi che manca, per un effetto più irregolare (0 = raggi pieni, 0.3 = molti vuoti)
+const uint32_t RAGGI_SEME = 202;                // cambia questo numero per avere raggi con altre lunghezze e altri vuoti
+
 // Buco al centro della stella: più il nutrimento è basso, più è grande (lascia vedere il cielo dietro)
 const float BUCO_SOGLIE[5] = { 91, 80, 60, 40, 20 };               // nutrimento da cui in su: 91 = nessun buco, 80 = livello 1, 60 = 2, 40 = 3, 20 = 4; sotto 20 = livello 5
 const float BUCO_RAGGIO[6] = { 0, 0.15, 0.25, 0.35, 0.45, 0.55 };  // grandezza del buco per livello, come frazione del raggio della stella (0.55 = più della metà)
@@ -81,6 +105,7 @@ const uint32_t MIC_FREQUENZA_HZ = 16000;        // frequenza di campionamento de
 const float SIRIO_ASCOLTO_RAGGIO_PX = 30;       // raggio del pallino durante l'ascolto, in px (più alto = pallino più grande; 64 = grande quanto la stella)
 // ASCOLTO_RAGGI (nato per Vega): mentre qualcuno parla il nucleo resta uguale e i raggi si allungano fino ai bordi dello schermo
 const float VEGA_ASCOLTO_RAGGIO_PX = 200;       // lunghezza dei raggi durante l'ascolto, in px (200 = arrivano agli angoli dello schermo; 120 = solo ai lati corti; più alto = vanno oltre)
+const float VEGA_ASCOLTO_RAGGIO_RAGGI_PX = 140;  // come sopra, ma per la versione a raggi (swipe): lunghezza dei raggi durante l'ascolto, in px (120 = si fermano al bordo sopra e sotto; più alto = vanno oltre)
 const float ASCOLTO_VELOCITA_SALITA = 6;        // quanto in fretta la stella diventa pallino quando inizia la voce (più alto = più rapido, 6 = circa mezzo secondo)
 const float ASCOLTO_VELOCITA_DISCESA = 2.5;     // quanto in fretta torna normale quando la voce finisce (più basso = ritorno più lento)
 
@@ -247,6 +272,16 @@ const int   COSTELLAZIONE_PASSO_GRIGLIA = 3;     // px fra i puntini delle stell
 const float COSTELLAZIONE_RAGGIO_CERCHIO_PX = 95;   // distanza delle stelle piccole dal centro della principale, in px
 const float COSTELLAZIONE_GIRO_S = 60;           // secondi per un giro completo del cerchio (più alto = più lento; negativo = gira al contrario)
 const float COSTELLAZIONE_LUCE_TRATTO = 0.6;     // luminosità dei tratti rispetto al colore della stella (0-1)
+// Costellazione disegnata (COSTELLAZIONE_DISEGNATA = true, per ora Sirio): più stelle ci sono, più la scena rimpicciolisce
+const float COSTELLAZIONE_SPAZIO_PX = 106;       // distanza massima dal centro della stella più lontana, in px (120 = bordo alto e basso; più basso = scena più piccola, con più margine)
+const float COSTELLAZIONE_ZOOM_VELOCITA = 1.5;   // quanto in fretta la scena rimpicciolisce quando cambia il numero di stelle dal menu (più alto = più rapido)
+// Stelle piccole a pallino (COSTELLAZIONE_PALLINI = true, per ora Sirio): un pallino pieno e intorno un anello fermo di puntini
+const int   COSTELLAZIONE_PALLINO_PX = 5;        // raggio del pallino delle stelle più grandi (grandezza 1 in COSTELLAZIONE_GRANDEZZE), in px; le altre in proporzione
+const float COSTELLAZIONE_ANELLO_PX = 10;        // distanza dell'anello dal centro, per le stelle più grandi, in px (le altre in proporzione; più alto = anello più largo)
+const float COSTELLAZIONE_ANELLO_STACCO_MIN_PX = 3;  // spazio minimo fra il pallino e l'anello, in px (così sulle stelle piccole non si toccano)
+const int   COSTELLAZIONE_ANELLO_PUNTINI = 12;   // quanti puntini ha l'anello delle stelle più grandi (le altre ne hanno meno, in proporzione; più alto = anello più pieno)
+const int   COSTELLAZIONE_ANELLO_PUNTINO_PX = 1; // raggio dei puntini dell'anello, in px (0 = un solo pixel)
+const float COSTELLAZIONE_ANELLO_LUCE = 0.7;     // luminosità dell'anello rispetto al pallino (0-1; più basso = più scuro)
 // Animazione quando si aggiunge una stella (10 secondi). Ogni numero è il secondo in cui FINISCE quel passaggio
 const float ANIM_COST_FINE_SCOMPARSA_S = 1;      // 0-1 s: la stella si rimpicciolisce e scompare
 const float ANIM_COST_FINE_BIANCO_S = 2;         // 1-2 s: lo schermo diventa bianco

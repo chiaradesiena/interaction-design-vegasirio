@@ -16,11 +16,13 @@ float densitaStella(float dx, float dy, const AspettoStella& a) {
 
 // Griglia di puntini: più il punto è dentro la stella, più il puntino è grande
 void disegnaStella(M5Canvas& c, int cx, int cy, const AspettoStella& a) {
+  if (stileStella == STILE_RAGGI && a.cane <= 0 && a.passoGriglia <= 0) { disegnaStellaRaggi(c, cx, cy, a); return; }   // versione a raggi (disegno_raggi.ino), solo la stella grande
   if (a.luminosita <= 0) return;                      // fase "spenta" del lampeggio: la stella non si vede
   if (!isfinite(a.raggio) || a.raggio <= 0) return;  // grandezza sbagliata (es. molla impazzita): meglio non disegnare che bloccarsi
   bool grigliaCane = a.cane >= SIRIO_CANE_SOGLIA_GRIGLIA;   // Sirio che diventa cane: puntini più fitti (disegno_cane.ino)
   if (a.cane > 0) preparaCane(a);
-  const int passoStella = a.passoGriglia > 0 ? a.passoGriglia : STELLA_PASSO_GRIGLIA;   // le stelle piccole usano puntini più fitti
+  const int passoPrincipale = stileStella == STILE_FITTO ? FITTO_PASSO_GRIGLIA : STELLA_PASSO_GRIGLIA;   // versione a puntini fitti (swipe verso l'alto, logica_stile.ino)
+  const int passoStella = a.passoGriglia > 0 ? a.passoGriglia : passoPrincipale;   // le stelle piccole usano puntini più fitti
   const int passo = grigliaCane ? SIRIO_CANE_PASSO_GRIGLIA : passoStella;
   const float raggioMax = grigliaCane ? SIRIO_CANE_PUNTINO_MAX_PX : passo / 2.0f;
   int n = (int)(a.raggio * max(STELLA_ALONE, 1.0f) / passo) + 1;

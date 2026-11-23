@@ -31,7 +31,8 @@ void applicaAscoltoPallino() {
 // restano della stessa grandezza in px. Si parte dall'aspetto già calcolato e si modifica solo raggio, vita e buco.
 void applicaAscoltoRaggi() {
   float raggioBase = aspetto.raggio;
-  float raggioAscolto = max(raggioBase, VEGA_ASCOLTO_RAGGIO_PX);
+  float arrivo = stileStella == STILE_RAGGI ? VEGA_ASCOLTO_RAGGIO_RAGGI_PX : VEGA_ASCOLTO_RAGGIO_PX;   // la versione a raggi ha la sua lunghezza
+  float raggioAscolto = max(raggioBase, arrivo);
   float raggioNuovo = raggioBase + (raggioAscolto - raggioBase) * ascolto;
   aspetto.vita = aspetto.vita * raggioBase / raggioNuovo;
   aspetto.buco = aspetto.buco * raggioBase / raggioNuovo;

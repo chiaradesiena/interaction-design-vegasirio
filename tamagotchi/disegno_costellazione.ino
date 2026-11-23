@@ -12,21 +12,27 @@ uint16_t scurisciColore(uint16_t c, float k) {
   return (r << 11) | (g << 5) | b;
 }
 
-// Tratti: la prima stella piccola è unita alla principale, ogni altra alla precedente;
-// a costellazione completa l'ultima si unisce alla prima e il cerchio si chiude. Poi le stelle piccole.
+// Tratti: ogni stella piccola è unita alla sua stella (stellaCollegata: sul cerchio la precedente, nella costellazione
+// disegnata quella della tabella); sul cerchio, a costellazione completa, l'ultima si unisce alla prima. Poi le stelle piccole.
 void disegnaCostellazione(M5Canvas& c, int cx, int cy, const AspettoStella& piccola) {
   int n = costellazioneStelleMostrate - 1;               // quante stelle piccole
   if (n <= 0 || costellazioneVisibile < 0.05f) return;   // nessuna, oppure nascoste (festa)
   bool completa = costellazioneStelleMostrate >= COSTELLAZIONE_NUMERO_STELLE;
   uint16_t coloreTratto = scurisciColore(piccola.colore, COSTELLAZIONE_LUCE_TRATTO * costellazioneVisibile);
-  int xPrima = cx, yPrima = cy;                          // il primo tratto parte dalla stella principale
+  int xPrima = cx, yPrima = cy;                          // l'ultima stella disegnata (serve a chiudere il cerchio)
   for (int i = 0; i < n; i++) {
     int x, y;
     posizioneStellaPiccola(i, n, cx, cy, x, y);
-    c.drawLine(xPrima, yPrima, x, y, coloreTratto);
+    for (int secondo = 0; secondo < 2; secondo++) {      // il tratto e, se c'è, il secondo tratto dei triangoli
+      int k = stellaCollegata(i, secondo == 1);
+      if (k < 0) continue;
+      int xa, ya;
+      puntoCostellazione(k, n, cx, cy, xa, ya);
+      c.drawLine(xa, ya, x, y, coloreTratto);
+    }
     xPrima = x; yPrima = y;
   }
-  if (completa && n > 2) {
+  if (completa && n > 2 && !COSTELLAZIONE_DISEGNATA) {
     int x0, y0;
     posizioneStellaPiccola(0, n, cx, cy, x0, y0);
     c.drawLine(xPrima, yPrima, x0, y0, coloreTratto);
@@ -34,7 +40,8 @@ void disegnaCostellazione(M5Canvas& c, int cx, int cy, const AspettoStella& picc
   for (int i = 0; i < n; i++) {
     int x, y;
     posizioneStellaPiccola(i, n, cx, cy, x, y);
-    disegnaStella(c, x, y, piccola);
+    if (COSTELLAZIONE_PALLINI) disegnaPallinoCostellazione(c, x, y, piccola, COSTELLAZIONE_GRANDEZZE[i]);   // Sirio: pallino con anello, grande come nel disegno vero
+    else disegnaStella(c, x, y, piccola);
   }
 }
 
@@ -51,20 +58,48 @@ void disegnaPuntiCostellazione(M5Canvas& c, int cx, int cy, float tratto, bool n
   int n = costellazioneStelle - 1;                       // stelle piccole, compresa la nuova (l'ultima)
   if (n <= 0) return;
   bool completa = costellazioneStelle >= COSTELLAZIONE_NUMERO_STELLE;
-  int xPrima = cx, yPrima = cy;                          // il primo tratto parte dalla stella principale
+  int xPrima = cx, yPrima = cy;                          // l'ultima stella disegnata (serve a chiudere il cerchio)
   for (int i = 0; i < n; i++) {
     int x, y;
     posizioneStellaPiccola(i, n, cx, cy, x, y);
     bool nuova = i == n - 1;
-    if (nuova) disegnaTrattoCrescente(c, xPrima, yPrima, x, y, tratto);
-    else c.drawLine(xPrima, yPrima, x, y, NERO);
-    if (!nuova || nuovoAcceso) c.fillCircle(x, y, ANIM_COST_PUNTO_PX, NERO);
+    for (int secondo = 0; secondo < 2; secondo++) {      // il tratto verso la sua stella e, se c'è, il secondo tratto dei triangoli
+      int k = stellaCollegata(i, secondo == 1);
+      if (k < 0) continue;
+      int xa, ya;
+      puntoCostellazione(k, n, cx, cy, xa, ya);
+      if (nuova) disegnaTrattoCrescente(c, xa, ya, x, y, tratto);   // cresce dalla stella a cui è unita verso la nuova
+      else c.drawLine(xa, ya, x, y, NERO);
+    }
+    int puntino = max(1, (int)(ANIM_COST_PUNTO_PX * COSTELLAZIONE_GRANDEZZE[i] + 0.5f));   // grande come nel disegno vero
+    if (!nuova || nuovoAcceso) c.fillCircle(x, y, puntino, NERO);
     xPrima = x; yPrima = y;
   }
-  if (completa && n > 2) {                               // ultima stella: si chiude anche il cerchio, insieme al tratto nuovo
+  if (completa && n > 2 && !COSTELLAZIONE_DISEGNATA) {   // ultima stella sul cerchio: si chiude anche il cerchio, insieme al tratto nuovo
     int x0, y0;
     posizioneStellaPiccola(0, n, cx, cy, x0, y0);
     disegnaTrattoCrescente(c, xPrima, yPrima, x0, y0, tratto);
   }
   c.fillCircle(cx, cy, ANIM_COST_PUNTO_PRINCIPALE_PX, NERO);
+}
+
+// Stella piccola a pallino (COSTELLAZIONE_PALLINI): un pallino pieno col colore della salute e intorno un anello
+// fermo di puntini un po' più scuri, che gira solo insieme alla costellazione. Sparisce e ricompare con la festa
+// (costellazioneVisibile) e lampeggia insieme alla stella principale (luminosita). "grandezza" = quella della stella nel disegno vero (1 = le più grandi).
+void disegnaPallinoCostellazione(M5Canvas& c, int x, int y, const AspettoStella& piccola, float grandezza) {
+  if (piccola.luminosita <= 0) return;
+  float k = costellazioneVisibile * grandezza;
+  int raggio = (int)(COSTELLAZIONE_PALLINO_PX * k + 0.5f);
+  if (raggio < 1 && k > 0.05f) raggio = 1;                // anche la più piccola resta almeno un pixel
+  if (raggio < 1) return;
+  c.fillCircle(x, y, raggio, piccola.colore);
+  uint16_t coloreAnello = scurisciColore(piccola.colore, COSTELLAZIONE_ANELLO_LUCE);
+  float r = max(COSTELLAZIONE_ANELLO_PX * k, raggio + COSTELLAZIONE_ANELLO_STACCO_MIN_PX * costellazioneVisibile);   // mai attaccato al pallino
+  int quanti = max(6, (int)(COSTELLAZIONE_ANELLO_PUNTINI * r / COSTELLAZIONE_ANELLO_PX + 0.5f));   // anelli piccoli = meno puntini, così restano staccati
+  for (int i = 0; i < quanti; i++) {
+    float angolo = costellazioneAngolo + 2 * PI * i / quanti;
+    int px = x + (int)(r * cosf(angolo) + 0.5f), py = y + (int)(r * sinf(angolo) + 0.5f);
+    if (COSTELLAZIONE_ANELLO_PUNTINO_PX <= 0) c.drawPixel(px, py, coloreAnello);
+    else c.fillCircle(px, py, COSTELLAZIONE_ANELLO_PUNTINO_PX, coloreAnello);
+  }
 }
