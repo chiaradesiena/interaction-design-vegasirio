@@ -412,5 +412,17 @@ const PezzoCane SIRIO_CANE_PEZZI[SIRIO_CANE_NUMERO_PEZZI] = {
   { -46, -34,  5, 15,   0 },   // zampa dietro (dietro l'altra)
 };
 
+// PROPRIO_PAPARAZZI (nato per Vega): le stelle di sfondo girano veloci, il fondo diventa bianco e poi rosa,
+// arrivano i paparazzi; alla fine tutto al contrario fino al cielo normale. Parte e si interrompe come il cane
+// (stessa soglia di salute; si interrompe con carezza o scossa abbastanza lunghe). Il rosa è in colori.h
+const float VEGA_PAPARAZZI_ATTESA_MIN_S = 30;      // i paparazzi arrivano a caso fra questo numero di secondi...
+const float VEGA_PAPARAZZI_ATTESA_MAX_S = 60;      // ...e questo (contati da quando entra nello stato proprio o dalla fine dell'ultima volta; per provare: 5 e 10)
+const float VEGA_PAPARAZZI_DURATA_S = 15;          // durata di tutta l'animazione, in secondi (transizioni comprese)
+const float VEGA_PAPARAZZI_GIRO_S = 1.2;           // secondi in cui le stelle di sfondo accelerano e diventano bianche (alla fine: rallentano)
+const float VEGA_PAPARAZZI_BIANCO_S = 0.6;         // secondi in cui il fondo passa da nero a bianco (e alla fine da bianco a nero)
+const float VEGA_PAPARAZZI_ROSA_S = 0.7;           // secondi in cui il fondo passa da bianco a rosa (e alla fine da rosa a bianco)
+const float VEGA_PAPARAZZI_GIRO_CIELO_GRADI_S = 360;   // velocità massima del giro delle stelle di sfondo, in gradi al secondo (360 = un giro al secondo)
+const float VEGA_PAPARAZZI_RITORNO_S = 1;          // secondi per tornare al cielo normale quando li si interrompe (più basso = più brusco)
+
 // Conversioni fisse (non vanno tarate)
 const float GRADI_A_RADIANTI = PI / 180.0;

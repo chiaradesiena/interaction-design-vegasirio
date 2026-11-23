@@ -126,6 +126,14 @@ size_t abbaioNumeroCampioni = 0;                 // quanti campioni del suono si
 int abbaioProssimo = 0;                          // quale abbaio della passeggiata tocca adesso
 int abbaioUfRimasti = 0;                         // quanti "bau" mancano in questo abbaio
 uint32_t abbaioProssimoUfMs = 0;                 // a che ora suona il prossimo "bau"
+// Stato proprio di Vega: i paparazzi
+uint32_t prossimiPaparazziMs = 0;                // a che ora possono arrivare i prossimi paparazzi
+bool paparazziAttivi = false;                    // è in corso l'animazione dei paparazzi
+bool paparazziInRitorno = false;                 // è stata interrotta: sta tornando in fretta al cielo normale
+uint32_t paparazziInizioMs = 0;                  // quando è partita l'animazione
+uint32_t paparazziRitornoMs = 0;                 // quando è iniziato il ritorno veloce
+float paparazziBordoRitorno = 0;                 // a che punto della transizione era al momento dell'interruzione, in secondi
+uint16_t coloreFondo = NERO;                     // colore del fondo della schermata HOME (nero; rosa durante i paparazzi)
 
 // Sensori
 uint32_t ultimaLetturaOrologioMs = 0;            // quando si è letto l'orologio l'ultima volta

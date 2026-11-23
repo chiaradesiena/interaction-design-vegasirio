@@ -45,6 +45,7 @@ void aggiornaStato() {
   aggiornaSuonoCarezza(ora);
   aggiornaFesta(ora);
   aggiornaCane(ora, dt);
+  aggiornaPaparazzi(ora, dt);
   aggiornaAbbaio(ora);
   aggiornaAttivita(dt);
   aggiornaMovimento(ora);

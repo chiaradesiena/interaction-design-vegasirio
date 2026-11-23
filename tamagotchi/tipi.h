@@ -138,4 +138,4 @@ enum TipoAscolto  { ASCOLTO_PALLINO, ASCOLTO_RAGGI };        // voce: la stella 
 enum TipoCrescita { CRESCITA_TRATTI, CRESCITA_CONTINUA };    // carezza: cresce a tratti / cresce di continuo
 enum TipoOrbita   { ORBITA_OTTO, ORBITA_CASUALE };           // movimento: disegna un 8 / orbite casuali con profondità
 enum TipoFesta    { FESTA_SALTI_BORDO, FESTA_RIMBALZI };     // energia al 100%: salti lungo il bordo / rimbalzi fra alto e basso
-enum TipoStatoProprio { PROPRIO_NESSUNO, PROPRIO_CANE };     // salute alta: nessuna animazione propria / diventa un cane (Sirio)
+enum TipoStatoProprio { PROPRIO_NESSUNO, PROPRIO_CANE, PROPRIO_PAPARAZZI };   // salute alta: nessuna animazione propria / diventa un cane (Sirio) / arrivano i paparazzi (Vega)
