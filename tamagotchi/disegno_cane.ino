@@ -78,7 +78,7 @@ uint16_t coloreSfumato(uint16_t c, float k) {
 // Durante la trasformazione (densità mescolata con la stella) il bordo sfuma ancora di luce, per un passaggio morbido.
 void disegnaPuntinoCane(M5Canvas& c, int x, int y, int passo, float densita, uint16_t colore, bool formato) {
   if (densita < (formato ? SIRIO_CANE_SOGLIA_BORDO : SIRIO_CANE_LUCE_MIN)) return;   // fuori dalla sagoma: niente puntino
-  c.fillRect(x - passo / 2, y - passo / 2, passo, passo, NERO);   // copre il cielo dietro il cane
+  c.fillRect(x - passo / 2, y - passo / 2, passo, passo, coloreFondo);   // copre il cielo dietro il cane (col colore dello sfondo)
   uint16_t luce = formato ? colore : coloreSfumato(colore, densita);
   c.fillCircle(x, y, (int)(SIRIO_CANE_PUNTINO_MAX_PX + 0.5f), luce);
 }

@@ -216,6 +216,19 @@ int unisonoCentroX = 0, unisonoCentroY = 0;   // dove sta, in px
 AspettoStella aspettiGalassia[UNISONO_MAX_STELLE];   // le altre stelle
 int galassiaX[UNISONO_MAX_STELLE], galassiaY[UNISONO_MAX_STELLE];   // dove stanno, in px
 
+// Stato malata (logica_malata.ino)
+bool malata = false;                      // la stella è malata (salute scesa sotto MALATA_SOGLIA_ENTRATA, non ancora tornata a MALATA_SOGLIA_USCITA)
+float malataSfumatura = 0;                // 0 = aspetto normale, 1 = stella nera (sale quando si ammala, torna a 0 solo alla fine della guarigione)
+float malataRosso = 0;                    // 0 = niente rosso, 1 = fondo e cielo rossi
+float malataBianco = 0;                   // 0 = niente bianco, 1 = schermo tutto bianco (durante la guarigione)
+float malataGuarigione = 0;               // 0 = appena ammalata (salute sotto MALATA_SOGLIA_ENTRATA), 1 = quasi guarita (salute vicina a MALATA_SOGLIA_USCITA)
+bool malataInUscita = false;              // è in corso il passaggio rosso -> bianco -> cielo nero
+uint32_t malataGuaritaMs = 0;             // quando è guarita (inizio del passaggio)
+uint16_t coloreFondo = NERO;              // colore dello sfondo di questo fotogramma (nero, rosso se è malata, bianco mentre guarisce)
+bool malataAccesa = true;                 // nel lampeggio affannoso: la stella è accesa
+uint32_t malataProssimoLampoMs = 0;       // a che ora il lampeggio cambia (da acceso a spento o viceversa)
+uint32_t statoCasualeMalata = MALATA_SEME;   // numeri "casuali" ripetibili per il ritmo dei lampi
+
 // Tempo e disegno
 uint32_t ultimoAggiornamento = 0;
 // Numeri "casuali" ripetibili: con lo stesso seme esce sempre lo stesso cielo

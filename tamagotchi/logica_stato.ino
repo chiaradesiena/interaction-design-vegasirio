@@ -39,6 +39,7 @@ void aggiornaStato() {
   aggiornaCostellazione(ora, dt);
   controllaIncontroUnisono(ora);
   aggiornaLampeggio(ora);
+  aggiornaMalata(ora, dt);                           // stato malata: fondo rosso, lampeggio affannoso, cielo rosso scuro (logica_malata.ino)
   aggiornaBuco(dt);
   aggiornaColoreSalute(ora);
   aggiornaSuonoNutrimento(ora);
@@ -58,6 +59,7 @@ void aggiornaStato() {
   applicaCostellazione();
   applicaCane();
   applicaZoomCostellazione();                        // anche la stella principale rimpicciolisce con la scena
+  applicaMalata();                                   // da malata la stella diventa nera (logica_malata.ino)
   salvaStato(ora);
   suonoInCorso = suonoNotaCorrente >= 0 || pienoNotaCorrente >= 0 || festaNotaCorrente >= 0 || abbaioUfRimasti > 0 || sliderInUso;   // il microfono aspetta finché c'è un suono
 }

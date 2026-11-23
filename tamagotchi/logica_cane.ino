@@ -13,7 +13,7 @@ void programmaProssimoCane(uint32_t ora) {
 
 // Il cane non parte mentre succede già qualcos'altro: festa, stella ferma per poca energia, carezza, scossa o voce
 bool caneLibero() {
-  return !festaAttiva && !staticaEnergia && !carezzando && !scossaRecente && !voceAttiva;
+  return !festaAttiva && !staticaEnergia && !carezzando && !scossaRecente && !voceAttiva && !malataVisibile();   // da malata, o mentre guarisce, niente cane (logica_malata.ino)
 }
 
 // Vero quando un bisogno sta salendo davvero grazie a chi gioca con la stella (la socialità non conta):

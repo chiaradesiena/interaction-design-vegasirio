@@ -20,3 +20,9 @@ const uint16_t COLORE_VALORI = rgb(200, 200, 200);   // scritta dei valori in al
 const uint16_t GRIGIO_LIVELLO_SPENTO = rgb(70, 70, 70);   // puntini dei livelli del menu oltre il valore scelto
 const uint16_t GRIGIO_MENU =rgb(45, 45, 45);        // puntini di fondo del menu
 const uint16_t GRIGIO_BORDO_MENU = rgb(110, 110, 110);   // linea sottile del bordo del menu mentre entra o esce
+// Stato malata (logica_malata.ino)
+const uint16_t MALATA_COLORE_FONDO = rgb(200, 0, 0);   // rosso dello schermo quando la stella è malata
+const uint16_t MALATA_COLORE_FONDO_GUARENDO = rgb(110, 0, 0);   // rosso attenuato dello schermo quando è quasi guarita (fra i due cambia piano piano con la salute)
+const uint16_t MALATA_COLORE_CIELO = rgb(110, 0, 0);   // rosso scuro dei puntini del cielo più luminosi (quelli più piccoli sono ancora più scuri)
+const uint16_t MALATA_COLORE_CIELO_GUARENDO = rgb(60, 0, 0);   // rosso dei puntini del cielo quando è quasi guarita (più scuro del fondo, come sopra)
+const uint16_t MALATA_COLORE_STELLA = NERO;            // colore della stella malata
